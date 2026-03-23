@@ -1,10 +1,20 @@
 <app-header></app-header>
 
-<div class="main-layout">
-  <app-sidebar
-    [title]="sidebarTitle"
-    [topics]="sidebarTopics">
-  </app-sidebar>
+<div class="page-shell">
+  <aside class="left-bar">
+    <app-sidebar
+      [title]="sidebarTitle"
+      [topics]="sidebarTopics">
+    </app-sidebar>
+  </aside>
 
-  <router-outlet></router-outlet>
+  <main class="page-content">
+    <router-outlet></router-outlet>
+  </main>
+
+  <aside class="right-bar">
+    <app-rightbar></app-rightbar>
+  </aside>
 </div>
+
+<app-footer></app-footer>

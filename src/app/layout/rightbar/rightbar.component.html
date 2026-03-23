@@ -1,0 +1,23 @@
+<div class="rightbar-section">
+  <h3>Quick Links</h3>
+  <ul>
+    @for (item of quickLinks; track item) {
+      <li>{{ item }}</li>
+    }
+  </ul>
+</div>
+
+<div class="rightbar-section">
+  <h3>Recent Posts</h3>
+  <ul>
+    @for (item of recentPosts; track item) {
+      <li>{{ item }}</li>
+    }
+  </ul>
+</div>
+
+<div class="rightbar-card">
+  <h4>Need Help?</h4>
+  <p>Browse tutorials, programs, and interview questions.</p>
+  <button type="button">Explore</button>
+</div>

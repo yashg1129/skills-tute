@@ -3,11 +3,19 @@ import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/ro
 import { filter } from 'rxjs/operators';
 import { HeaderComponent } from './layout/header/header.component';
 import { SidebarComponent } from './layout/sidebar/sidebar.component';
+import { RightbarComponent } from './layout/rightbar/rightbar.component';
+import { FooterComponent } from './layout/footer/footer.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [HeaderComponent, SidebarComponent, RouterOutlet],
+  imports: [
+    HeaderComponent,
+    SidebarComponent,
+    RightbarComponent,
+    FooterComponent,
+    RouterOutlet
+  ],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

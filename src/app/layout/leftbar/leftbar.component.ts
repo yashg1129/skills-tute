@@ -1,12 +1,12 @@
 import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'app-sidebar',
+  selector: 'app-leftbar',
   standalone: true,
-  templateUrl: './sidebar.component.html',
-  styleUrl: './sidebar.component.scss'
+  templateUrl: './leftbar.component.html',
+  styleUrl: './leftbar.component.scss'
 })
-export class SidebarComponent {
+export class LeftbarComponent {
   @Input() title = '';
   @Input() topics: string[] = [];
 }

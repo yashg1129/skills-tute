@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { JavaTutorialComponent } from './pages/java-tutorial/java-tutorial.component';
 import { SpringBootTutorialComponent } from './pages/spring-boot-tutorial/spring-boot-tutorial.component';
 import { InterviewQuestionsComponent } from './pages/interview-questions/interview-questions.component';
+import { InterviewTopicComponent } from './pages/interview-topic/interview-topic.component';
 
 export const routes: Routes = [
   {
@@ -72,5 +73,9 @@ export const routes: Routes = [
         'Project Manager Interview Questions'
       ]
     }
+  },
+  {
+    path: 'interview-topics',
+    component: InterviewTopicComponent
   }
 ];

@@ -1,26 +1,32 @@
-<div class="content-wrapper">
-  <div class="breadcrumb">
-    <span>🏠 Home</span>
-    <span>›</span>
-    <span>Interview Questions</span>
+<div class="interview-page">
+  <h2>Interview Questions</h2>
+
+  <div *ngIf="loading" class="status-message">
+    Loading questions...
   </div>
 
-  <div class="tab-row">
-    <button routerLink="/java-tutorial">📄 Tutorial</button>
-    <button>&lt;/&gt; Programs</button>
-    <button>⚙ OOPs</button>
-    <button>🔗 Collections</button>
-    <button class="active">❓ Interview Q</button>
+  <div *ngIf="errorMessage" class="status-message error">
+    {{ errorMessage }}
   </div>
 
-  <div class="article-card">
-    <h1>300 Core Java Interview Questions and Answers</h1>
-    <p class="updated">Last Updated : 17 Mar 2025</p>
+  <div *ngIf="!loading && !errorMessage && questions.length === 0" class="status-message">
+    No questions found.
+  </div>
+  Topics111={{questions}}<br>
+  @for (item of questions; track item) {
+    aa= {{ item.name }}<br>
+  }
+Topics22={{questions}}<br>
+  <div class="question-list" *ngIf="!loading && questions.length > 0">
+    <div class="question-card" *ngFor="let q of questions">
+      <div class="card-header">
+        <h3>{{ q.name }}</h3>
+        <span class="difficulty">{{ q.difficulty }}</span>
+      </div>
 
-    <p class="highlight">90% assurance of interview questions</p>
-
-    <p>
-      There is a list of 300 core Java interview questions and answers for practice.
-    </p>
+      <p><strong>Category:</strong> {{ q.category }}</p>
+      <p><strong>Question:</strong> {{ q.question }}</p>
+      <p><strong>Answer:</strong> {{ q.answer }}</p>
+    </div>
   </div>
 </div>

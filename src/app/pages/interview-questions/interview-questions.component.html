@@ -1,0 +1,32 @@
+<div class="interview-page">
+  <h2>Interview Questions</h2>
+
+  <div *ngIf="loading" class="status-message">
+    Loading questions...
+  </div>
+
+  <div *ngIf="errorMessage" class="status-message error">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="!loading && !errorMessage && questions.length === 0" class="status-message">
+    No questions found.
+  </div>
+  Topics111={{questions}}<br>
+  @for (item of questions; track item) {
+    aa= {{ item.name }}<br>
+  }
+Topics22={{questions}}<br>
+  <!-- <div class="question-list">
+    <div class="question-card">
+      <div class="card-header">
+        <h3>{{ q.name }}</h3>
+        <span class="difficulty">{{ q.difficulty }}</span>
+      </div>
+
+      <p><strong>Category:</strong> {{ q.category }}</p>
+      <p><strong>Question:</strong> {{ q.question }}</p>
+      <p><strong>Answer:</strong> {{ q.answer }}</p>
+    </div>
+  </div> -->
+</div>

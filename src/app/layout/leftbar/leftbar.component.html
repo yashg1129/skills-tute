@@ -1,0 +1,9 @@
+<div class="sidebar">
+  <div class="sidebar-title">{{ title }}</div>
+
+  <ul>
+    @for (topic of topics; track topic) {
+      <li><a href="#" routerLink="interview-question/java">{{ topic }}</a></li>
+    }
+  </ul>
+</div>

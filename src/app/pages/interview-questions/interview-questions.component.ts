@@ -4,6 +4,7 @@ import {
   InterviewQuestion,
   InterviewQuestionService
 } from '../../services/interview-question.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-interview-questions',
@@ -16,10 +17,12 @@ export class InterviewQuestionsComponent implements OnInit {
   questions: InterviewQuestion[] = [];
   loading = false;
   errorMessage = '';
+  topicId = '';
 
-  constructor(private service: InterviewQuestionService) {}
-
+  constructor(private service: InterviewQuestionService, private route: ActivatedRoute) {}
   ngOnInit(): void {
+    this.topicId = this.route.snapshot.paramMap.get('topicId') || '';
+    console.log('Topic ID:', this.topicId);
     this.loadQuestions();
   }
 

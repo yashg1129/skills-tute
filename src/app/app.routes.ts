@@ -3,6 +3,7 @@ import { JavaTutorialComponent } from './pages/java-tutorial/java-tutorial.compo
 import { SpringBootTutorialComponent } from './pages/spring-boot-tutorial/spring-boot-tutorial.component';
 import { InterviewQuestionsComponent } from './pages/interview-questions/interview-questions.component';
 import { InterviewTopicComponent } from './pages/interview-topic/interview-topic.component';
+import { ForumComponent } from './pages/forum/forum.component';
 
 export const routes: Routes = [
   {
@@ -57,7 +58,7 @@ export const routes: Routes = [
     }
   },
   {
-    path: 'interview-questions',
+    path: 'interview-questions/:topicId',
     component: InterviewQuestionsComponent,
     data: {
       sidebarTitle: 'All Interview',
@@ -77,5 +78,9 @@ export const routes: Routes = [
   {
     path: 'interview-topics',
     component: InterviewTopicComponent
+  },
+  {
+    path: 'forum',
+    component: ForumComponent
   }
 ];

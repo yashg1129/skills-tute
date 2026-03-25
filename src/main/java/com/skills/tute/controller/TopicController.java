@@ -1,4 +1,4 @@
-package com.skills.tute;
+package com.skills.tute.controller;
 
 import com.skills.tute.entity.Topic;
 import com.skills.tute.service.TopicService;

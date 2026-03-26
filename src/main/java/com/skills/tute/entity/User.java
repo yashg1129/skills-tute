@@ -26,6 +26,7 @@ public class User {
 
     private Integer experience;
 
+    @Column(nullable = false)
     private LocalDate date;
 
 }

@@ -1,5 +1,9 @@
 package com.skills.tute.dto;
 
+import com.skills.tute.entity.City;
+import com.skills.tute.entity.Company;
+import com.skills.tute.entity.Country;
+import com.skills.tute.entity.Topic;
 import lombok.Data;
 
 @Data
@@ -9,12 +13,10 @@ public class InterviewQuestionRequest {
     private Integer userId;
     private Integer experience;
     private String question;
-    private Integer topicId;
-    private String topicName;
-    private Integer companyId;
-    private String companyName;
-    private Integer countryId;
-    private String countryName;
-    private Integer cityId;
-    private String cityName;
+
+    private Topic topic;
+    private Company company;
+    private Country country;
+    private City city;
+
 }

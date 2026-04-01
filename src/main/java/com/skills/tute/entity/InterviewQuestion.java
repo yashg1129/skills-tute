@@ -29,4 +29,6 @@ public class InterviewQuestion {
     @Column(name = "ask_count", nullable = false)
     private Integer askCount;
 
+    private LocalDateTime date;
+
 }

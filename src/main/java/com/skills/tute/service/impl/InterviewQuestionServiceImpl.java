@@ -10,6 +10,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.skills.tute.utils.StStringUtils.*;
@@ -45,17 +47,15 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
         InterviewQuestion question = new InterviewQuestion();
         question.setId(request.getId());
 
-        Topic topic = new Topic();
-        if (request.getTopicId() == null && isNotBlank(request.getTopicName())) {
-            topic.setName(firstCharCaps(request.getTopicName()));
+        Topic topic = request.getTopic();
+        if (topic.getId() == null && isNotBlank(topic.getName())) {
+            topic.setName(firstCharCaps(topic.getName()));
             Integer displayOrder = topicRepository.findMaxId();
             if (displayOrder == null) {
                 displayOrder = 0;
             }
             topic.setDisplayOrder(++displayOrder);
-            topicRepository.save(topic);
-        } else {
-            topic.setId(request.getTopicId());
+            topic = topicRepository.save(topic);
         }
         question.setTopic(topic);
 
@@ -75,6 +75,7 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
         } else {
             question.setAskCount(interviewQuestion.getAskCount() + 1);
         }
+        question.setDate(LocalDateTime.now());
         saveInterviewQuestionUser(question, request);
     }
 
@@ -83,39 +84,36 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
         interviewQuestionUser.setInterviewQuestion(interviewQuestion);
         interviewQuestionUser.setUserId(request.getUserId());
 
-        Company company = null;
-        if (request.getCompanyId() == null && isNotBlank(request.getCompanyName())) {
+        Company company = request.getCompany();
+        if (company.getId() == null && isNotBlank(company.getName())) {
             company = new Company();
-            company.setName(firstCharCaps(request.getCompanyName()));
-            companyRepository.save(company);
-        } else if(request.getCompanyId() != null) {
-            company = new Company();
-            company.setId(request.getCompanyId());
+            company.setName(firstCharCaps(company.getName()));
+            company = companyRepository.save(company);
+        } else {
+            company = null;
         }
         interviewQuestionUser.setCompany(company);
 
-        City city = null;
-        if (request.getCityId() == null && isNotBlank(request.getCityName())) {
+        City city = request.getCity();
+        if (city.getId() == null && isNotBlank(city.getName())) {
             city = new City();
-            city.setName(firstCharCaps(request.getCityName()));
-            cityRepository.save(city);
-        } else if (request.getCityId() != null) {
-            city = new City();
-            city.setId(request.getCityId());
+            city.setName(firstCharCaps(city.getName()));
+            city = cityRepository.save(city);
+        } else {
+            city = null;
         }
         interviewQuestionUser.setCity(city);
 
-        Country country = null;
-        if (request.getCountryId() == null && isNotBlank(request.getCountryName())) {
+        Country country = request.getCountry();
+        if (country.getId() == null && isNotBlank(country.getName())) {
             country = new Country();
-            country.setName(firstCharCaps(request.getCompanyName()));
+            country.setName(firstCharCaps(country.getName()));
             countryRepository.save(country);
-        } else if (request.getCountryId() != null) {
-            country = new Country();
-            country.setId(request.getCountryId());
+        } else {
+            country = null;
         }
         interviewQuestionUser.setCountry(country);
-
+        interviewQuestionUser.setDate(LocalDate.now());
         interviewQuestionUserRepository.save(interviewQuestionUser);
     }
 

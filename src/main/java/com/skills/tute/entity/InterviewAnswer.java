@@ -32,8 +32,7 @@ public class InterviewAnswer {
     @JoinColumn(name = "question_id")
     private InterviewQuestion interviewQuestion;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @Column(name = "user_id", nullable = false)
+    private Integer userId;
 
 }

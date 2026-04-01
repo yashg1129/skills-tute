@@ -1,5 +1,6 @@
 package com.skills.tute.controller;
 
+import com.skills.tute.dto.InterviewQuestionRequest;
 import com.skills.tute.entity.InterviewQuestion;
 import com.skills.tute.service.InterviewQuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,7 @@ public class InterviewQuestionController {
     private InterviewQuestionService service;
 
     @PostMapping
-    InterviewQuestion save(@RequestBody InterviewQuestion question) {
+    InterviewQuestion save(@RequestBody InterviewQuestionRequest question) {
         return service.save(question);
     }
 

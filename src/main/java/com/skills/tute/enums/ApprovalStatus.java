@@ -1,5 +1,5 @@
 package com.skills.tute.enums;
 
-public enum Status {
+public enum ApprovalStatus {
     INIT, PENDING, APPROVED, REJECTED
 }

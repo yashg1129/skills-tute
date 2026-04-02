@@ -11,5 +11,8 @@ public interface InterviewQuestionService {
     InterviewQuestion update(InterviewQuestion question);
     InterviewQuestion findById(Integer id);
     List<InterviewQuestion> findAll();
+    List<InterviewQuestion> findByTopicId(Integer id);
+    List<InterviewQuestion> findByTopicName(String name);
+    List<InterviewQuestion> findAll(String topicName);
     void deleteById(Integer id);
 }

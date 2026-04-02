@@ -20,6 +20,7 @@ import static com.skills.tute.utils.StStringUtils.*;
 @Service
 public class InterviewQuestionServiceImpl implements InterviewQuestionService {
 
+    public static final String DUPLICATION_QUESTION = "Duplication question";
     @Autowired
     private InterviewQuestionRepository repository;
 
@@ -129,7 +130,7 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
 
         InterviewQuestionUser questionUser = interviewQuestionUserRepository.findByInterviewQuestionAndUserIdAndCompanyAndDate(interviewQuestion, interviewQuestionUser.getUserId(), interviewQuestionUser.getCompany(), LocalDate.now());
         if(questionUser != null) {
-            throw new DuplicateResourceException("Duplication question");
+            throw new DuplicateResourceException(DUPLICATION_QUESTION);
         }
         interviewQuestionUserRepository.save(interviewQuestionUser);
     }
@@ -147,6 +148,24 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
     @Override
     public List<InterviewQuestion> findAll() {
         return repository.findAll();
+    }
+
+    @Override
+    public List<InterviewQuestion> findByTopicId(Integer id) {
+        Topic topic = topicRepository.findById(id).orElse(null);
+        return repository.findByTopic(topic);
+    }
+
+    @Override
+    public List<InterviewQuestion> findByTopicName(String name) {
+        Topic topic = topicRepository.findByName(name);
+        return repository.findByTopic(topic);
+    }
+
+    @Override
+    public List<InterviewQuestion> findAll(String topicName) {
+        Topic topic = topicRepository.findByName(topicName);
+        return repository.findByTopic(topic);
     }
 
     @Override

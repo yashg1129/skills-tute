@@ -30,6 +30,16 @@ public class InterviewQuestionController {
         return service.findAll();
     }
 
+    @GetMapping("/topic/id/{topicId}")
+    List<InterviewQuestion> findByTopicId(@PathVariable("topicId") Integer topicId) {
+        return service.findByTopicId(topicId);
+    }
+
+    @GetMapping("topic/name/{topicName}")
+    List<InterviewQuestion> findByTopicName(@PathVariable("topicName") String name) {
+        return service.findByTopicName(name);
+    }
+
     @GetMapping("/{id}")
     InterviewQuestion findById(@PathVariable("id") Integer id) {
         return service.findById(id);

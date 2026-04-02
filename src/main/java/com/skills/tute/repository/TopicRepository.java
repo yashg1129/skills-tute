@@ -8,4 +8,6 @@ public interface TopicRepository extends JpaRepository<Topic, Integer> {
 
     @Query(value = "SELECT MAX(id) FROM topics", nativeQuery = true)
     Integer findMaxId();
+
+    Topic findByName(String name);
 }

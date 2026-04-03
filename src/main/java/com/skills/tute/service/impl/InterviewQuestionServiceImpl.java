@@ -51,7 +51,7 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
 
         Topic topic = request.getTopic();
         if (topic.getId() == null && isNotBlank(topic.getName())) {
-            topic.setName(firstCharCaps(topic.getName()));
+            topic.setName(topic.getName());
             Topic res = topicRepository.findByName(topic.getName());
             if(res != null) {
                 topic = res;
@@ -101,7 +101,7 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
                 company = com;
             } else {
                 company = new Company();
-                company.setName(firstCharCaps(company.getName()));
+                company.setName(request.getCompany().getName());
                 company = companyRepository.save(company);
             }
         }

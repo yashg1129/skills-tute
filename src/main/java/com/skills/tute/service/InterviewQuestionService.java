@@ -10,9 +10,8 @@ public interface InterviewQuestionService {
     InterviewQuestion save(InterviewQuestionRequest question);
     InterviewQuestion update(InterviewQuestion question);
     InterviewQuestion findById(Integer id);
-    List<InterviewQuestion> findAll();
+    List<InterviewQuestion> findAll(String approval);
     List<InterviewQuestion> findByTopicId(Integer id);
     List<InterviewQuestion> findByTopicNameAndApproval(String name, String approval);
-    List<InterviewQuestion> findAll(String topicName);
     void deleteById(Integer id);
 }

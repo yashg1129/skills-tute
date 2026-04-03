@@ -75,7 +75,13 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
     }
 
     private void saveQuestion(InterviewQuestionRequest request, Topic topic) {
-        InterviewQuestion interviewQuestion = repository.findByQuestionAndTopic(request.getQuestion(), topic);
+        InterviewQuestion interviewQuestion;
+        if(request.getId() != null) {
+            interviewQuestion = repository.findById(request.getId()).orElse(null);
+        } else {
+            interviewQuestion = repository.findByQuestionAndTopic(request.getQuestion(), topic);
+        }
+
         if (interviewQuestion == null) {
             interviewQuestion = new InterviewQuestion();
             interviewQuestion.setApprovedStatus(ApprovalStatus.PENDING.name());
@@ -153,8 +159,11 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
     }
 
     @Override
-    public List<InterviewQuestion> findAll() {
-        return repository.findAll();
+    public List<InterviewQuestion> findAll(String approval) {
+        if("ALL".equals(approval)) {
+            return repository.findAll();
+        }
+        return repository.findByApprovedStatus(approval);
     }
 
     @Override
@@ -167,12 +176,6 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
     public List<InterviewQuestion> findByTopicNameAndApproval(String name, String approval) {
         Topic topic = topicRepository.findByName(name);
         return repository.findByTopicAndApprovedStatus(topic, approval);
-    }
-
-    @Override
-    public List<InterviewQuestion> findAll(String topicName) {
-        Topic topic = topicRepository.findByName(topicName);
-        return repository.findByTopic(topic);
     }
 
     @Override

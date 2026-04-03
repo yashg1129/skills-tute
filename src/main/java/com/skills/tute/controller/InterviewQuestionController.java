@@ -26,8 +26,8 @@ public class InterviewQuestionController {
     }
 
     @GetMapping
-    List<InterviewQuestion> findAll() {
-        return service.findAll();
+    List<InterviewQuestion> findAll(@RequestParam String approval) {
+        return service.findAll(approval);
     }
 
     @GetMapping("/topic/id/{topicId}")

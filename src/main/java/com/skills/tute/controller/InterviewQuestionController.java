@@ -36,8 +36,8 @@ public class InterviewQuestionController {
     }
 
     @GetMapping("topic/name/{topicName}")
-    List<InterviewQuestion> findByTopicName(@PathVariable("topicName") String name) {
-        return service.findByTopicName(name);
+    List<InterviewQuestion> findByTopicName(@PathVariable("topicName") String name, @RequestParam String approval) {
+        return service.findByTopicNameAndApproval(name, approval);
     }
 
     @GetMapping("/{id}")

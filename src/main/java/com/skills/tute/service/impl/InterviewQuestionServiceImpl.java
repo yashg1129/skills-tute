@@ -164,9 +164,9 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
     }
 
     @Override
-    public List<InterviewQuestion> findByTopicName(String name) {
+    public List<InterviewQuestion> findByTopicNameAndApproval(String name, String approval) {
         Topic topic = topicRepository.findByName(name);
-        return repository.findByTopic(topic);
+        return repository.findByTopicAndApprovedStatus(topic, approval);
     }
 
     @Override

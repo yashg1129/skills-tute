@@ -12,7 +12,7 @@ public interface InterviewQuestionService {
     InterviewQuestion findById(Integer id);
     List<InterviewQuestion> findAll();
     List<InterviewQuestion> findByTopicId(Integer id);
-    List<InterviewQuestion> findByTopicName(String name);
+    List<InterviewQuestion> findByTopicNameAndApproval(String name, String approval);
     List<InterviewQuestion> findAll(String topicName);
     void deleteById(Integer id);
 }

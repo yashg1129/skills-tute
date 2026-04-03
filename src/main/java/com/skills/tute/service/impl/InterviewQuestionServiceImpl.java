@@ -1,5 +1,6 @@
 package com.skills.tute.service.impl;
 
+import com.skills.tute.cache.Cache;
 import com.skills.tute.dto.InterviewQuestionRequest;
 import com.skills.tute.entity.*;
 import com.skills.tute.enums.ApprovalStatus;
@@ -62,6 +63,8 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
                 }
                 topic.setDisplayOrder(++displayOrder);
                 topic = topicRepository.save(topic);
+
+                Cache.clearTopics();
             }
         }
         question.setTopic(topic);
@@ -103,6 +106,8 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
                 company = new Company();
                 company.setName(request.getCompany().getName());
                 company = companyRepository.save(company);
+
+                Cache.clearCompanies();
             }
         }
         interviewQuestionUser.setCompany(company);
@@ -112,6 +117,7 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
             city = new City();
             city.setName(firstCharCaps(city.getName()));
             city = cityRepository.save(city);
+            Cache.clearCities();
         } else {
             city = null;
         }
@@ -122,6 +128,7 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
             country = new Country();
             country.setName(firstCharCaps(country.getName()));
             countryRepository.save(country);
+            Cache.clearCountries();
         } else {
             country = null;
         }

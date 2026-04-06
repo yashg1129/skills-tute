@@ -2,11 +2,15 @@ package com.skills.tute.controller;
 
 import com.skills.tute.dto.InterviewQuestionRequest;
 import com.skills.tute.entity.InterviewQuestion;
+import com.skills.tute.security.AuthenticatedUser;
 import com.skills.tute.service.InterviewQuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/interview-questions")
@@ -17,6 +21,10 @@ public class InterviewQuestionController {
 
     @PostMapping
     InterviewQuestion save(@RequestBody InterviewQuestionRequest question) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        assert authentication != null;
+        Integer userId = ((AuthenticatedUser) Objects.requireNonNull(authentication.getPrincipal())).getUserId();
+        question.setUserId(userId);
         return service.save(question);
     }
 

@@ -65,6 +65,10 @@ public class JwtService {
         return extractAllClaims(token).get("role", String.class);
     }
 
+    public Integer extractUserId(String token) {
+        return extractAllClaims(token).get("userId", Integer.class);
+    }
+
 
     private SecretKey getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);

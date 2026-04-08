@@ -5,13 +5,16 @@ import com.skills.tute.dto.InterviewQuestionRequest;
 import com.skills.tute.entity.*;
 import com.skills.tute.enums.ApprovalStatus;
 import com.skills.tute.exception.DuplicateResourceException;
+import com.skills.tute.exception.InvalidQuestionStateException;
 import com.skills.tute.repository.*;
 import com.skills.tute.service.InterviewQuestionService;
 
+import com.skills.tute.utils.StConstant;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.AccessDeniedException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -84,7 +87,7 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
 
         if (interviewQuestion == null) {
             interviewQuestion = new InterviewQuestion();
-            interviewQuestion.setApprovedStatus(ApprovalStatus.PENDING.name());
+            interviewQuestion.setApproveStatus(ApprovalStatus.PENDING.name());
             interviewQuestion.setQuestion(request.getQuestion());
             interviewQuestion.setTopic(topic);
             interviewQuestion.setAskCount(1);
@@ -149,7 +152,16 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
     }
 
     @Override
-    public InterviewQuestion update(InterviewQuestion question) {
+    public InterviewQuestion update(InterviewQuestionRequest request) throws AccessDeniedException {
+        if(request.getApproveStatus() != null)  {
+            throw new AccessDeniedException(StConstant.FORBIDDEN_EXCEPTION);
+        }
+        InterviewQuestion question = repository.findById(request.getId()).orElse(null);
+        assert question != null;
+        question.setQuestion(request.getQuestion());
+        question.setTopic(request.getTopic());
+        question.setApproveStatus(request.getApproveStatus());
+
         return repository.save(question);
     }
 
@@ -159,11 +171,8 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
     }
 
     @Override
-    public List<InterviewQuestion> findAll(String approval) {
-        if("ALL".equals(approval)) {
-            return repository.findAll();
-        }
-        return repository.findByApprovedStatus(approval);
+    public List<InterviewQuestionUser> findAll(String approval, Integer userId) {
+        return interviewQuestionUserRepository.findByUserId(userId);
     }
 
     @Override
@@ -175,11 +184,18 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
     @Override
     public List<InterviewQuestion> findByTopicNameAndApproval(String name, String approval) {
         Topic topic = topicRepository.findByName(name);
-        return repository.findByTopicAndApprovedStatus(topic, approval);
+        return repository.findByTopicAndApproveStatus(topic, approval);
     }
 
     @Override
-    public void deleteById(Integer id) {
-        repository.deleteById(id);
+    public void deleteById(Integer userQuestionId, Integer userId) {
+        InterviewQuestionUser interviewQuestionUser = interviewQuestionUserRepository.findById(userQuestionId).orElse(null);
+        assert interviewQuestionUser != null;
+        InterviewQuestion question = repository.findById(interviewQuestionUser.getInterviewQuestion().getId()).orElse(null);
+        assert question != null;
+        if("APPROVED".equals(question.getApproveStatus())) {
+            throw new InvalidQuestionStateException("You cannot delete an approved question.");
+        }
+        repository.deleteById(userQuestionId);
     }
 }

@@ -12,7 +12,7 @@ public interface InterviewQuestionRepository extends JpaRepository<InterviewQues
 
     List<InterviewQuestion> findByTopic(Topic topic);
 
-    List<InterviewQuestion> findByTopicAndApprovedStatus(Topic topic, String approval);
+    List<InterviewQuestion> findByTopicAndApproveStatus(Topic topic, String approval);
 
-    List<InterviewQuestion> findByApprovedStatus(String approval);
+    List<InterviewQuestion> findByApproveStatus(String approval);
 }

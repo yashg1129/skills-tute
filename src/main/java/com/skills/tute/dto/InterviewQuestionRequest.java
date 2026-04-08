@@ -19,4 +19,8 @@ public class InterviewQuestionRequest {
     private Country country;
     private City city;
 
+    //admin
+    private String approveStatus;
+    private Integer askCount;
+
 }

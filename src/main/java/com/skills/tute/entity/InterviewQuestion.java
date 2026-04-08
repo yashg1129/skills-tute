@@ -3,9 +3,7 @@ package com.skills.tute.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @Entity
@@ -20,7 +18,7 @@ public class InterviewQuestion {
     private String question;
 
     @Column(nullable = false)
-    private String approvedStatus;
+    private String approveStatus;
 
     @ManyToOne
     @JoinColumn(name = "topic_id", nullable = false)

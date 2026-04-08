@@ -39,7 +39,7 @@ public final class Cache {
     }
 
     public static void clearTopics() {
-        topics.clear();
+        topics = null;
     }
 
     public static void clearCompanies() {

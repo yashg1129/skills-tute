@@ -2,15 +2,16 @@ package com.skills.tute.controller;
 
 import com.skills.tute.dto.InterviewQuestionRequest;
 import com.skills.tute.entity.InterviewQuestion;
-import com.skills.tute.security.AuthenticatedUser;
+import com.skills.tute.entity.InterviewQuestionUser;
 import com.skills.tute.service.InterviewQuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import static com.skills.tute.utils.SecurityUtils.getUserId;
+
+import java.nio.file.AccessDeniedException;
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/interview-questions")
@@ -20,22 +21,23 @@ public class InterviewQuestionController {
     private InterviewQuestionService service;
 
     @PostMapping
-    InterviewQuestion save(@RequestBody InterviewQuestionRequest question) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        assert authentication != null;
-        Integer userId = ((AuthenticatedUser) Objects.requireNonNull(authentication.getPrincipal())).getUserId();
-        question.setUserId(userId);
-        return service.save(question);
+    @PreAuthorize("hasRole('USER')")
+    InterviewQuestion save(@RequestBody InterviewQuestionRequest questionRequest) throws AccessDeniedException {
+        questionRequest.setUserId(getUserId());
+        return service.save(questionRequest);
     }
 
     @PutMapping
-    InterviewQuestion update(@RequestBody InterviewQuestion question) {
-        return service.update(question);
+    @PreAuthorize("hasRole('USER')")
+    InterviewQuestion update(@RequestBody InterviewQuestionRequest questionRequest) throws AccessDeniedException {
+        questionRequest.setUserId(getUserId());
+        return service.update(questionRequest);
     }
 
     @GetMapping
-    List<InterviewQuestion> findAll(@RequestParam String approval) {
-        return service.findAll(approval);
+    @PreAuthorize("hasRole('USER')")
+    List<InterviewQuestionUser> findAll(@RequestParam String approval) {
+        return service.findAll(approval, getUserId());
     }
 
     @GetMapping("/topic/id/{topicId}")
@@ -54,7 +56,8 @@ public class InterviewQuestionController {
     }
 
     @DeleteMapping("/{id}")
-    void deleteById(@PathVariable("id") Integer id) {
-        service.deleteById(id);
+    @PreAuthorize("hasRole('USER')")
+    void deleteById(@PathVariable("id") Integer userQuestionId) {
+        service.deleteById(userQuestionId, getUserId());
     }
 }

@@ -3,7 +3,7 @@ package com.skills.tute.service.impl;
 import com.skills.tute.cache.Cache;
 import com.skills.tute.dto.InterviewQuestionRequest;
 import com.skills.tute.entity.*;
-import com.skills.tute.enums.ApprovalStatus;
+import com.skills.tute.enums.ApproveStatus;
 import com.skills.tute.exception.DuplicateResourceException;
 import com.skills.tute.exception.InvalidQuestionStateException;
 import com.skills.tute.repository.*;
@@ -65,6 +65,7 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
                     displayOrder = 0;
                 }
                 topic.setDisplayOrder(++displayOrder);
+                topic.setApproveStatus(ApproveStatus.PENDING);
                 topic = topicRepository.save(topic);
 
                 Cache.clearTopics();
@@ -87,7 +88,7 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
 
         if (interviewQuestion == null) {
             interviewQuestion = new InterviewQuestion();
-            interviewQuestion.setApproveStatus(ApprovalStatus.PENDING.name());
+            interviewQuestion.setApproveStatus(ApproveStatus.PENDING);
             interviewQuestion.setQuestion(request.getQuestion());
             interviewQuestion.setTopic(topic);
             interviewQuestion.setAskCount(1);
@@ -114,6 +115,7 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
             } else {
                 company = new Company();
                 company.setName(request.getCompany().getName());
+                company.setApproveStatus(ApproveStatus.PENDING);
                 company = companyRepository.save(company);
 
                 Cache.clearCompanies();
@@ -125,6 +127,7 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
         if (city.getId() == null && isNotBlank(city.getName())) {
             city = new City();
             city.setName(firstCharCaps(city.getName()));
+            city.setApproveStatus(ApproveStatus.PENDING);
             city = cityRepository.save(city);
             Cache.clearCities();
         } else {
@@ -136,6 +139,7 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
         if (country.getId() == null && isNotBlank(country.getName())) {
             country = new Country();
             country.setName(firstCharCaps(country.getName()));
+            country.setApproveStatus(ApproveStatus.PENDING);
             countryRepository.save(country);
             Cache.clearCountries();
         } else {
@@ -160,7 +164,7 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
         assert question != null;
         question.setQuestion(request.getQuestion());
         question.setTopic(request.getTopic());
-        question.setApproveStatus(request.getApproveStatus());
+        question.setApproveStatus(ApproveStatus.valueOf(request.getApproveStatus()));
 
         return repository.save(question);
     }
@@ -182,9 +186,9 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
     }
 
     @Override
-    public List<InterviewQuestion> findByTopicNameAndApproval(String name, String approval) {
+    public List<InterviewQuestion> findByTopicNameAndApproval(String name, String approveStatus) {
         Topic topic = topicRepository.findByName(name);
-        return repository.findByTopicAndApproveStatus(topic, approval);
+        return repository.findByTopicAndApproveStatus(topic, ApproveStatus.valueOf(approveStatus));
     }
 
     @Override
@@ -193,7 +197,7 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
         assert interviewQuestionUser != null;
         InterviewQuestion question = repository.findById(interviewQuestionUser.getInterviewQuestion().getId()).orElse(null);
         assert question != null;
-        if("APPROVED".equals(question.getApproveStatus())) {
+        if("APPROVED".equals(question.getApproveStatus().name())) {
             throw new InvalidQuestionStateException("You cannot delete an approved question.");
         }
         repository.deleteById(userQuestionId);

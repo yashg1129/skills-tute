@@ -14,6 +14,11 @@ public class InterviewQuestionUser {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    private String message;
+    private Integer star;
+    private Integer likes;
+    private Integer dislikes;
+
     @ManyToOne
     @JoinColumn(name = "question_id", nullable = false)
     private InterviewQuestion interviewQuestion;

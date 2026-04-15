@@ -2,6 +2,7 @@ package com.skills.tute.service.impl;
 
 import com.skills.tute.dto.InterviewQuestionRequest;
 import com.skills.tute.entity.*;
+import com.skills.tute.enums.ApproveStatus;
 import com.skills.tute.repository.*;
 import com.skills.tute.service.AdminInterviewQuestionService;
 import com.skills.tute.utils.StConstant;
@@ -41,18 +42,18 @@ public class AdminInterviewQuestionServiceImpl implements AdminInterviewQuestion
         assert question != null;
         question.setQuestion(request.getQuestion());
         question.setTopic(request.getTopic());
-        question.setApproveStatus(request.getApproveStatus());
+        question.setApproveStatus(ApproveStatus.valueOf(request.getApproveStatus()));
 
         return repository.save(question);
     }
 
     @Override
-    public List<InterviewQuestion> findAll(String approval) {
+    public List<InterviewQuestion> findAll(String approveStatus) {
         List<InterviewQuestion> list;
-        if("ALL".equals(approval) ) {
+        if("ALL".equals(approveStatus) ) {
             list = repository.findAll();
         } else {
-            list = repository.findByApproveStatus(approval);
+            list = repository.findByApproveStatus(ApproveStatus.valueOf(approveStatus));
         }
         return list;
     }

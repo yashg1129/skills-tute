@@ -2,6 +2,7 @@ package com.skills.tute.repository;
 
 import com.skills.tute.entity.InterviewQuestion;
 import com.skills.tute.entity.Topic;
+import com.skills.tute.enums.ApproveStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -12,7 +13,7 @@ public interface InterviewQuestionRepository extends JpaRepository<InterviewQues
 
     List<InterviewQuestion> findByTopic(Topic topic);
 
-    List<InterviewQuestion> findByTopicAndApproveStatus(Topic topic, String approval);
+    List<InterviewQuestion> findByTopicAndApproveStatus(Topic topic, ApproveStatus approveStatus);
 
-    List<InterviewQuestion> findByApproveStatus(String approval);
+    List<InterviewQuestion> findByApproveStatus(ApproveStatus approveStatus);
 }

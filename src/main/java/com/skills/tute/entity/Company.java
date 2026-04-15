@@ -1,5 +1,6 @@
 package com.skills.tute.entity;
 
+import com.skills.tute.enums.ApproveStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -16,4 +17,8 @@ public class Company {
 
     @Column(nullable = false)
     private String name;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ApproveStatus approveStatus = ApproveStatus.PENDING;
 }

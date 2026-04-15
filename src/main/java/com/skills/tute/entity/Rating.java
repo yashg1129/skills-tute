@@ -19,8 +19,8 @@ public class Rating {
 
     private String message;
     private Integer star;
-    private Integer like;
-    private Integer unlike;
+    private Integer likes;
+    private Integer dislikes;
 
     @Column(columnDefinition = "DATE DEFAULT CURRENT_DATE")
     private LocalDate date;

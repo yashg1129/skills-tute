@@ -1,5 +1,6 @@
 package com.skills.tute.entity;
 
+import com.skills.tute.enums.ApproveStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -20,13 +21,14 @@ public class InterviewAnswer {
     @Column(nullable = false)
     private LocalDateTime date;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String status;
+    private ApproveStatus approveStatus = ApproveStatus.PENDING;
 
     private String message;
     private Integer star;
-    private Integer like;
-    private Integer unlike;
+    private Integer likes;
+    private Integer dislikes;
 
     @ManyToOne
     @JoinColumn(name = "question_id")

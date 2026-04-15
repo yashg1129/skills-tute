@@ -1,5 +1,6 @@
 package com.skills.tute.entity;
 
+import com.skills.tute.enums.ApproveStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,5 +25,9 @@ public class Topic {
 
     @Column(name = "display_order", nullable = false)
     private Integer displayOrder;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ApproveStatus approveStatus;
 
 }

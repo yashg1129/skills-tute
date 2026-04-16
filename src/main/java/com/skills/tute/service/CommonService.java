@@ -9,8 +9,6 @@ import java.util.List;
 
 public interface CommonService {
 
-    List<Topic> getTopics();
-
     List<Company> getCompanies();
 
     List<Country> getCountries();

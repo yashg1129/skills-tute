@@ -1,8 +1,11 @@
 package com.skills.tute.repository;
 
 import com.skills.tute.entity.Topic;
+import com.skills.tute.enums.ApproveStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+
+import java.util.List;
 
 public interface TopicRepository extends JpaRepository<Topic, Integer> {
 
@@ -10,4 +13,6 @@ public interface TopicRepository extends JpaRepository<Topic, Integer> {
     Integer findMaxId();
 
     Topic findByName(String name);
+
+    List<Topic> findByApproveStatus(ApproveStatus approveStatus);
 }

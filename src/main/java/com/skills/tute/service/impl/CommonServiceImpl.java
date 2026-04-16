@@ -32,16 +32,6 @@ public class CommonServiceImpl implements CommonService {
     private CityRepository cityRepository;
 
     @Override
-    public List<Topic> getTopics() {
-        List<Topic> topics = Cache.getTopics();
-        if(topics == null) {
-           topics = topicRepository.findAll();
-           Cache.setTopics(topics);
-        }
-        return topics;
-    }
-
-    @Override
     public List<Company> getCompanies() {
         List<Company> companies = Cache.getCompanies();
         if(companies == null) {

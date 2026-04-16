@@ -14,6 +14,7 @@ import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 import static com.skills.tute.utils.SecurityUtils.getUserId;
+import static com.skills.tute.utils.SecurityUtils.isAdmin;
 
 @RestController
 @RequestMapping("/api/interview-answers")
@@ -37,7 +38,7 @@ public class InterviewAnswerController {
         if(answer.getApproveStatus() != null)  {
             throw new AccessDeniedException(StConstant.FORBIDDEN_EXCEPTION);
         }
-        return service.update(answer);
+        return service.update(answer, isAdmin());
     }
 
     @GetMapping

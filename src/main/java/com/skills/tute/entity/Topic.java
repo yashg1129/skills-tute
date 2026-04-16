@@ -23,11 +23,14 @@ public class Topic {
     @Column(nullable = false, unique = true)
     private String name;
 
+    @Column(name = "tutorial", nullable = false)
+    private boolean tutorial;
+
     @Column(name = "display_order", nullable = false)
     private Integer displayOrder;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private ApproveStatus approveStatus;
+    private ApproveStatus approveStatus = ApproveStatus.PENDING;
 
 }

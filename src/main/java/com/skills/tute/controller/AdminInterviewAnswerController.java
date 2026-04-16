@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 import static com.skills.tute.utils.SecurityUtils.getUserId;
+import static com.skills.tute.utils.SecurityUtils.isAdmin;
 
 @RestController
 @RequestMapping("/api/interview-answers/admin")
@@ -22,7 +23,7 @@ public class AdminInterviewAnswerController {
     @PutMapping
     @PreAuthorize("hasRole('ADMIN')")
     InterviewAnswer update(@RequestBody InterviewAnswer answer) {
-        return service.update(answer);
+        return service.update(answer, isAdmin());
     }
 
     @GetMapping

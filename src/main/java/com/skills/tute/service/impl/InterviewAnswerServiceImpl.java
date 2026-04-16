@@ -17,6 +17,7 @@ import java.util.List;
 public class InterviewAnswerServiceImpl implements InterviewAnswerService {
 
     public static final String YOU_CANNOT_DELETE_AN_APPROVED_ANSWER = "You cannot delete an approved answer.";
+    public static final String YOU_CANNOT_UPDATE_AN_APPROVED_ANSWER = "You cannot update an approved answer.";
 
     @Autowired
     private InterviewAnswerRepository repository;
@@ -28,8 +29,11 @@ public class InterviewAnswerServiceImpl implements InterviewAnswerService {
     }
 
     @Override
-    public InterviewAnswer update(InterviewAnswer answer) {
+    public InterviewAnswer update(InterviewAnswer answer, boolean isAdmin) {
         InterviewAnswer ans = repository.findById(answer.getId()).orElse(null);
+        if(!isAdmin && ans != null && ApproveStatus.APPROVED.equals(ans.getApproveStatus())) {
+            throw new InvalidStateException(YOU_CANNOT_UPDATE_AN_APPROVED_ANSWER);
+        }
         return repository.save(answer);
     }
 

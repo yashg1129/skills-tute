@@ -4,5 +4,6 @@ public final class StConstant {
 
     public static final String FORBIDDEN_EXCEPTION = "You are not authorized to perform this action";
     public static final String ALL = "ALL";
+    public static final String APPROVED = "APPROVED";
 
 }

@@ -3,7 +3,10 @@ package com.skills.tute.controller;
 import com.skills.tute.dto.InterviewQuestionRequest;
 import com.skills.tute.entity.InterviewQuestion;
 import com.skills.tute.entity.InterviewQuestionUser;
+import com.skills.tute.enums.ApproveStatus;
+import com.skills.tute.exception.PermissionDeniedException;
 import com.skills.tute.service.InterviewQuestionService;
+import com.skills.tute.utils.StConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +33,9 @@ public class InterviewQuestionController {
     @PutMapping
     @PreAuthorize("hasRole('USER')")
     InterviewQuestion update(@RequestBody InterviewQuestionRequest questionRequest) throws AccessDeniedException {
+        if(questionRequest.getApproveStatus() != null)  {
+            throw new AccessDeniedException(StConstant.FORBIDDEN_EXCEPTION);
+        }
         questionRequest.setUserId(getUserId());
         return service.update(questionRequest);
     }

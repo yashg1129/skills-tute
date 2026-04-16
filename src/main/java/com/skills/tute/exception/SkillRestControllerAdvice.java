@@ -25,8 +25,8 @@ public class SkillRestControllerAdvice {
         return getResponseEntity(ex.getMessage(), HttpStatus.FORBIDDEN);
     }
 
-    @ExceptionHandler(InvalidQuestionStateException.class)
-    public ResponseEntity<?> exception(InvalidQuestionStateException ex) {
+    @ExceptionHandler(InvalidStateException.class)
+    public ResponseEntity<?> exception(InvalidStateException ex) {
         return getResponseEntity(ex.getMessage(), HttpStatus.CONFLICT);
     }
 

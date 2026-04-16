@@ -5,11 +5,10 @@ import com.skills.tute.dto.InterviewQuestionRequest;
 import com.skills.tute.entity.*;
 import com.skills.tute.enums.ApproveStatus;
 import com.skills.tute.exception.DuplicateResourceException;
-import com.skills.tute.exception.InvalidQuestionStateException;
+import com.skills.tute.exception.InvalidStateException;
 import com.skills.tute.repository.*;
 import com.skills.tute.service.InterviewQuestionService;
 
-import com.skills.tute.utils.StConstant;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -157,9 +156,6 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
 
     @Override
     public InterviewQuestion update(InterviewQuestionRequest request) throws AccessDeniedException {
-        if(request.getApproveStatus() != null)  {
-            throw new AccessDeniedException(StConstant.FORBIDDEN_EXCEPTION);
-        }
         InterviewQuestion question = repository.findById(request.getId()).orElse(null);
         assert question != null;
         question.setQuestion(request.getQuestion());
@@ -197,8 +193,8 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
         assert interviewQuestionUser != null;
         InterviewQuestion question = repository.findById(interviewQuestionUser.getInterviewQuestion().getId()).orElse(null);
         assert question != null;
-        if("APPROVED".equals(question.getApproveStatus().name())) {
-            throw new InvalidQuestionStateException("You cannot delete an approved question.");
+        if(ApproveStatus.APPROVED.equals(question.getApproveStatus())) {
+            throw new InvalidStateException("You cannot delete an approved question.");
         }
         repository.deleteById(userQuestionId);
     }

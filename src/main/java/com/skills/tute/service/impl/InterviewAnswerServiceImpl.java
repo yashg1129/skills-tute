@@ -2,8 +2,11 @@ package com.skills.tute.service.impl;
 
 import com.skills.tute.entity.InterviewAnswer;
 import com.skills.tute.entity.InterviewQuestion;
+import com.skills.tute.enums.ApproveStatus;
+import com.skills.tute.exception.InvalidStateException;
 import com.skills.tute.repository.InterviewAnswerRepository;
 import com.skills.tute.service.InterviewAnswerService;
+import com.skills.tute.utils.StConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +15,8 @@ import java.util.List;
 
 @Service
 public class InterviewAnswerServiceImpl implements InterviewAnswerService {
+
+    public static final String YOU_CANNOT_DELETE_AN_APPROVED_ANSWER = "You cannot delete an approved answer.";
 
     @Autowired
     private InterviewAnswerRepository repository;
@@ -24,6 +29,7 @@ public class InterviewAnswerServiceImpl implements InterviewAnswerService {
 
     @Override
     public InterviewAnswer update(InterviewAnswer answer) {
+        InterviewAnswer ans = repository.findById(answer.getId()).orElse(null);
         return repository.save(answer);
     }
 
@@ -38,8 +44,28 @@ public class InterviewAnswerServiceImpl implements InterviewAnswerService {
     }
 
     @Override
-    public List<InterviewAnswer> findAll() {
-        return repository.findAll();
+    public List<InterviewAnswer> findByApproveStatus(String approveStatus) {
+        List<InterviewAnswer> list;
+        if(StConstant.ALL.equals(approveStatus)) {
+            list = repository.findAll();
+        } else {
+            list = repository.findByApproveStatus(ApproveStatus.valueOf(approveStatus));
+        }
+        return list;
+    }
+
+    @Override
+    public List<InterviewAnswer> findByUserId(Integer userId) {
+        return repository.findByUserId(userId);
+    }
+
+    @Override
+    public void deleteByUserIdAndId(Integer userId, Integer id) {
+        InterviewAnswer answer = repository.findById(id).orElse(null);
+        if(answer != null && ApproveStatus.APPROVED.equals(answer.getApproveStatus())) {
+            throw new InvalidStateException(YOU_CANNOT_DELETE_AN_APPROVED_ANSWER);
+        }
+        repository.deleteByIdAndUserId(id, userId);
     }
 
     @Override

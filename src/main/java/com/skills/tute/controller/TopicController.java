@@ -18,8 +18,8 @@ public class TopicController {
     private TopicService service;
 
     @GetMapping
-    List<Topic> findApprovedTopics() {
-        return service.findByApproveStatus(StConstant.APPROVED);
+    List<Topic> findApprovedTopics(@RequestParam("tutorial") Boolean isTutorial) {
+        return service.findByApprovedStatus(isTutorial);
     }
 
     @GetMapping("/admin")
@@ -28,13 +28,13 @@ public class TopicController {
         return service.findByApproveStatus(approveStatus);
     }
 
-    @PutMapping
+    @PutMapping("/admin")
     @PreAuthorize("hasRole('ADMIN')")
     Topic update(@RequestBody Topic topic) {
         return service.update(topic);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/admin/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     void delete(@PathVariable("id") Integer id) {
         service.deleteById(id);

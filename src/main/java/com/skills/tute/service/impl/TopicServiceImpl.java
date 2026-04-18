@@ -24,6 +24,17 @@ public class TopicServiceImpl implements TopicService {
     }
 
     @Override
+    public List<Topic> findByApprovedStatus(boolean isTutorial) {
+        List<Topic> list;
+        if(isTutorial) {
+            list = repository.findByApproveStatusAndTutorialOrderByDisplayOrder(ApproveStatus.APPROVED, true);
+        } else {
+            list = repository.findByApproveStatusOrderByName(ApproveStatus.APPROVED);
+        }
+        return list;
+    }
+
+    @Override
     public List<Topic> findByApproveStatus(String approveStatus) {
         List<Topic> list;
         if(StConstant.ALL.equals(approveStatus)) {

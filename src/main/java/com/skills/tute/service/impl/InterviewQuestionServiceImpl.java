@@ -65,8 +65,8 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
                 }
                 topic.setDisplayOrder(++displayOrder);
                 topic.setApproveStatus(ApproveStatus.PENDING);
+                topic.setTutorial(false);
                 topic = topicRepository.save(topic);
-
                 Cache.clearTopics();
             }
         }

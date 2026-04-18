@@ -14,5 +14,9 @@ public interface TopicRepository extends JpaRepository<Topic, Integer> {
 
     Topic findByName(String name);
 
+    List<Topic> findByApproveStatusAndTutorialOrderByDisplayOrder(ApproveStatus approveStatus, boolean tutorial);
+
+    List<Topic> findByApproveStatusOrderByName(ApproveStatus approveStatus);
+
     List<Topic> findByApproveStatus(ApproveStatus approveStatus);
 }

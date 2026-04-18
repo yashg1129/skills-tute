@@ -1,8 +1,6 @@
 package com.skills.tute.controller;
 
 import com.skills.tute.entity.InterviewAnswer;
-import com.skills.tute.enums.ApproveStatus;
-import com.skills.tute.exception.PermissionDeniedException;
 import com.skills.tute.service.InterviewAnswerService;
 import com.skills.tute.utils.StConstant;
 import org.apache.coyote.BadRequestException;
@@ -54,7 +52,7 @@ public class InterviewAnswerController {
 
     @GetMapping("/question/{id}")
     List<InterviewAnswer> findByQuestionId(@PathVariable("id") Integer questionId) {
-        return service.findByQuestionId(questionId);
+        return service.findByApprovedAnswerQuestionId(questionId);
     }
 
     @DeleteMapping("/{id}")

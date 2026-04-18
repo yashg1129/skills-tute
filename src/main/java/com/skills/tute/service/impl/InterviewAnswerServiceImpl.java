@@ -43,8 +43,8 @@ public class InterviewAnswerServiceImpl implements InterviewAnswerService {
     }
 
     @Override
-    public List<InterviewAnswer> findByQuestionId(Integer questionId) {
-        return repository.findByInterviewQuestion(new InterviewQuestion(questionId));
+    public List<InterviewAnswer> findByApprovedAnswerQuestionId(Integer questionId) {
+        return repository.findByApproveStatusAndInterviewQuestion(ApproveStatus.APPROVED, new InterviewQuestion(questionId));
     }
 
     @Override

@@ -38,8 +38,8 @@ public class AdminInterviewAnswerController {
     }
 
 //    @GetMapping("/question/{id}")
-//    List<InterviewAnswer> findByQuestionId(@PathVariable("id") Integer questionId) {
-//        return service.findByQuestionId(questionId);
+//    List<InterviewAnswer> findByApprovedAnswerQuestionId(@PathVariable("id") Integer questionId) {
+//        return service.findByApprovedAnswerQuestionId(questionId);
 //    }
 
     @PreAuthorize("hasRole('ADMIN')")

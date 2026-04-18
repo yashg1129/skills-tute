@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface InterviewAnswerRepository extends JpaRepository<InterviewAnswer, Integer> {
 
-    List<InterviewAnswer> findByInterviewQuestion(InterviewQuestion question);
+    List<InterviewAnswer> findByApproveStatusAndInterviewQuestion(ApproveStatus approveStatus, InterviewQuestion question);
 
     List<InterviewAnswer> findByApproveStatus(ApproveStatus approveStatus);
 

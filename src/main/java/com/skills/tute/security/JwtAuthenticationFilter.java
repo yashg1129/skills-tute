@@ -1,12 +1,16 @@
 package com.skills.tute.security;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -18,11 +22,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final CustomUserDetailsService userDetailsService;
+    private final AuthenticationEntryPoint authenticationEntryPoint;
 
     public JwtAuthenticationFilter(JwtService jwtService,
-                                   CustomUserDetailsService userDetailsService) {
+                                   CustomUserDetailsService userDetailsService, AuthenticationEntryPoint authenticationEntryPoint) {
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
+        this.authenticationEntryPoint = authenticationEntryPoint;
     }
 
     @Override
@@ -40,30 +46,58 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         token = authHeader.substring(7);
-        email = jwtService.extractUsername(token);
 
-        if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            userDetailsService.setToken(token);
-            UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+        try {
+            email = jwtService.extractUsername(token);
 
-            if (jwtService.isTokenValid(token, userDetails)) {
+            if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                userDetailsService.setToken(token);
+                UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
-                String role = jwtService.extractRole(token);
-                Integer userId = jwtService.extractUserId(token);
-                AuthenticatedUser principal = new AuthenticatedUser(userId, email, role);
+                if (jwtService.isTokenValid(token, userDetails)) {
 
-                UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(
-                                principal,
-                                null,
-                                userDetails.getAuthorities()
-                        );
+                    String role = jwtService.extractRole(token);
+                    Integer userId = jwtService.extractUserId(token);
+                    AuthenticatedUser principal = new AuthenticatedUser(userId, email, role);
 
-                authentication.setDetails(
-                        new WebAuthenticationDetailsSource().buildDetails(request)
-                );
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+                    UsernamePasswordAuthenticationToken authentication =
+                            new UsernamePasswordAuthenticationToken(
+                                    principal,
+                                    null,
+                                    userDetails.getAuthorities()
+                            );
+
+                    authentication.setDetails(
+                            new WebAuthenticationDetailsSource().buildDetails(request)
+                    );
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                }
             }
+        } catch (ExpiredJwtException ex) {
+            SecurityContextHolder.clearContext();
+            authenticationEntryPoint.commence(
+                    request,
+                    response,
+                    new JwtAuthenticationException(
+                            "Access token has expired",
+                            "TOKEN_EXPIRED",
+                            ex
+                    )
+            );
+            return;
+
+        } catch (JwtException | IllegalArgumentException ex) {
+            SecurityContextHolder.clearContext();
+            authenticationEntryPoint.commence(
+                    request,
+                    response,
+                    new JwtAuthenticationException(
+                            "Access token is invalid",
+                            "TOKEN_INVALID",
+                            ex
+                    )
+            );
+            return;
         }
 
         filterChain.doFilter(request, response);

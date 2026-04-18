@@ -53,4 +53,20 @@ public final class Cache {
     public static void clearCities() {
         cities = null;
     }
+
+    public static List<Topic> getTopics() {
+        return topics;
+    }
+
+    public static List<Company> getCompanies() {
+        return companies;
+    }
+
+    public static List<Country> getCountries() {
+        return countries;
+    }
+
+    public static List<City> getCities() {
+        return cities;
+    }
 }

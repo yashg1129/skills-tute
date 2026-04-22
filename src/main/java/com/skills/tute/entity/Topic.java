@@ -24,7 +24,7 @@ public class Topic {
     private String name;
 
     @Column(name = "tutorial", nullable = false)
-    private boolean tutorial;
+    private Boolean tutorial;
 
     @Column(name = "display_order", nullable = false)
     private Integer displayOrder;
@@ -49,11 +49,11 @@ public class Topic {
         this.name = name;
     }
 
-    public boolean isTutorial() {
+    public Boolean isTutorial() {
         return tutorial;
     }
 
-    public void setTutorial(boolean tutorial) {
+    public void setTutorial(Boolean tutorial) {
         this.tutorial = tutorial;
     }
 

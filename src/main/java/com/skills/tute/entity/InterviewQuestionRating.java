@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
-public class Rating {
+public class InterviewQuestionRating {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

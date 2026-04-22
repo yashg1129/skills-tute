@@ -36,6 +36,7 @@ public class InterviewAnswerServiceImpl implements InterviewAnswerService {
         }
         assert ans != null;
         ans.setAnswer(answer.getAnswer());
+        ans.setApproveStatus(answer.getApproveStatus());
         return repository.save(ans);
     }
 

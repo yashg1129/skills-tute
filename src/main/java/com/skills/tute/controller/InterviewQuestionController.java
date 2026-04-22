@@ -33,7 +33,7 @@ public class InterviewQuestionController {
     @PutMapping
     @PreAuthorize("hasRole('USER')")
     InterviewQuestion update(@RequestBody InterviewQuestionRequest questionRequest) throws AccessDeniedException {
-        if(questionRequest.getApproveStatus() != null)  {
+        if(ApproveStatus.APPROVED.name().equals(questionRequest.getApproveStatus()))  {
             throw new AccessDeniedException(StConstant.FORBIDDEN_EXCEPTION);
         }
         questionRequest.setUserId(getUserId());
@@ -42,8 +42,8 @@ public class InterviewQuestionController {
 
     @GetMapping
     @PreAuthorize("hasRole('USER')")
-    List<InterviewQuestionUser> findAll(@RequestParam String approval) {
-        return service.findAll(approval, getUserId());
+    List<InterviewQuestionUser> findAll(@RequestParam String approveStatus) {
+        return service.findAll(approveStatus, getUserId());
     }
 
     @GetMapping("/topic/id/{topicId}")

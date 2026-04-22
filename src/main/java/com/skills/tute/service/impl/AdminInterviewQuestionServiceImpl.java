@@ -5,6 +5,7 @@ import com.skills.tute.entity.*;
 import com.skills.tute.enums.ApproveStatus;
 import com.skills.tute.repository.*;
 import com.skills.tute.service.AdminInterviewQuestionService;
+import com.skills.tute.service.CommonService;
 import com.skills.tute.utils.StConstant;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,9 @@ public class AdminInterviewQuestionServiceImpl implements AdminInterviewQuestion
 
     @Autowired
     private InterviewQuestionRepository repository;
+
+    @Autowired
+    private CommonService commonService;
 
     @Autowired
     private InterviewQuestionUserRepository interviewQuestionUserRepository;
@@ -40,21 +44,8 @@ public class AdminInterviewQuestionServiceImpl implements AdminInterviewQuestion
     public InterviewQuestion update(InterviewQuestionRequest request) throws AccessDeniedException {
         InterviewQuestion question = repository.findById(request.getId()).orElse(null);
         assert question != null;
-        String topicName = request.getTopic().getName();
-        if(!topicName.equals(question.getTopic().getName())) {
-            Topic topic = topicRepository.findByName(topicName);
-            if(topic == null) {
-                topic = new Topic();
-                topic.setName(topicName);
-                Integer id = topicRepository.findMaxId();
-                topic.setDisplayOrder(id + 1);
-                topic.setTutorial(false);
-                topic = topicRepository.save(topic);
-            }
-            question.setTopic(topic);
-        } else {
-            question.setTopic(request.getTopic());
-        }
+        Topic topic = commonService.getTopicForUpdate(request, question);
+        question.setTopic(topic);
         question.setQuestion(request.getQuestion());
         question.setApproveStatus(ApproveStatus.valueOf(request.getApproveStatus()));
 

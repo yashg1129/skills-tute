@@ -2,10 +2,8 @@ package com.skills.tute.service.impl;
 
 import com.skills.tute.cache.Cache;
 
-import com.skills.tute.entity.City;
-import com.skills.tute.entity.Company;
-import com.skills.tute.entity.Country;
-import com.skills.tute.entity.Topic;
+import com.skills.tute.dto.InterviewQuestionRequest;
+import com.skills.tute.entity.*;
 import com.skills.tute.repository.CityRepository;
 import com.skills.tute.repository.CompanyRepository;
 import com.skills.tute.repository.CountryRepository;
@@ -49,5 +47,42 @@ public class CommonServiceImpl implements CommonService {
             Cache.setCities(cities);
         }
         return cities;
+    }
+
+    @Override
+    public Topic getTopicForUpdate(InterviewQuestionRequest request, InterviewQuestion question) {
+        Topic topic;
+        String topicName = request.getTopic().getName();
+        if(!topicName.equals(question.getTopic().getName())) {
+            topic = topicRepository.findByName(topicName);
+            if(topic == null) {
+                topic = new Topic();
+                topic.setName(topicName);
+                Integer id = topicRepository.findMaxId();
+                topic.setDisplayOrder(id + 1);
+                topic.setTutorial(false);
+                topic = topicRepository.save(topic);
+            }
+        } else {
+            topic = request.getTopic();
+        }
+        return topic;
+    }
+
+    @Override
+    public Company getCompanyForUpdate(InterviewQuestionRequest request, InterviewQuestionUser question) {
+        Company company;
+        String companyName = request.getCompany().getName();
+        if(!companyName.equals(question.getCompany().getName())) {
+            company = companyRepository.findByName(companyName);
+            if(company == null) {
+                company = new Company();
+                company.setName(companyName);
+                company = companyRepository.save(company);
+            }
+        } else {
+            company = request.getCompany();
+        }
+        return company;
     }
 }

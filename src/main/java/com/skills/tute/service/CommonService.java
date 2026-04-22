@@ -1,9 +1,7 @@
 package com.skills.tute.service;
 
-import com.skills.tute.entity.City;
-import com.skills.tute.entity.Company;
-import com.skills.tute.entity.Country;
-import com.skills.tute.entity.Topic;
+import com.skills.tute.dto.InterviewQuestionRequest;
+import com.skills.tute.entity.*;
 
 import java.util.List;
 
@@ -14,4 +12,8 @@ public interface CommonService {
     List<Country> getCountries();
 
     List<City> getCities();
+
+    Topic getTopicForUpdate(InterviewQuestionRequest request, InterviewQuestion question);
+
+    Company getCompanyForUpdate(InterviewQuestionRequest request, InterviewQuestionUser question);
 }

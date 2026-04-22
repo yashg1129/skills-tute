@@ -7,8 +7,11 @@ import com.skills.tute.enums.ApproveStatus;
 import com.skills.tute.exception.DuplicateResourceException;
 import com.skills.tute.exception.InvalidStateException;
 import com.skills.tute.repository.*;
+import com.skills.tute.service.AdminInterviewQuestionService;
+import com.skills.tute.service.CommonService;
 import com.skills.tute.service.InterviewQuestionService;
 
+import com.skills.tute.utils.StConstant;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,8 +27,12 @@ import static com.skills.tute.utils.StStringUtils.*;
 public class InterviewQuestionServiceImpl implements InterviewQuestionService {
 
     public static final String DUPLICATION_QUESTION = "Duplication question";
+
     @Autowired
     private InterviewQuestionRepository repository;
+
+    @Autowired
+    private AdminInterviewQuestionService adminInterviewQuestionService;
 
     @Autowired
     private InterviewQuestionUserRepository interviewQuestionUserRepository;
@@ -41,6 +48,9 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
 
     @Autowired
     private CityRepository cityRepository;
+
+    @Autowired
+    private CommonService commonService;
 
     @Transactional
     @Override
@@ -155,12 +165,24 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
     }
 
     @Override
+    @Transactional
     public InterviewQuestion update(InterviewQuestionRequest request) throws AccessDeniedException {
         InterviewQuestion question = repository.findById(request.getId()).orElse(null);
         assert question != null;
+        if(ApproveStatus.APPROVED.equals(question.getApproveStatus())) {
+            throw new AccessDeniedException(StConstant.FORBIDDEN_EXCEPTION);
+        }
         question.setQuestion(request.getQuestion());
-        question.setTopic(request.getTopic());
-        question.setApproveStatus(ApproveStatus.valueOf(request.getApproveStatus()));
+        Topic topic = commonService.getTopicForUpdate(request, question);
+        question.setTopic(topic);
+        question.setApproveStatus(ApproveStatus.PENDING);
+
+        InterviewQuestionUser interviewQuestionUser = interviewQuestionUserRepository.findById(question.getId()).orElse(null);
+
+        assert interviewQuestionUser != null;
+        Company company = commonService.getCompanyForUpdate(request, interviewQuestionUser);
+        interviewQuestionUser.setCompany(company);
+        interviewQuestionUserRepository.save(interviewQuestionUser);
 
         return repository.save(question);
     }

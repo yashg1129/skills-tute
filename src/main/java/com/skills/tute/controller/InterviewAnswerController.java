@@ -1,6 +1,7 @@
 package com.skills.tute.controller;
 
 import com.skills.tute.entity.InterviewAnswer;
+import com.skills.tute.enums.ApproveStatus;
 import com.skills.tute.service.InterviewAnswerService;
 import com.skills.tute.utils.StConstant;
 import org.apache.coyote.BadRequestException;
@@ -33,7 +34,7 @@ public class InterviewAnswerController {
 
     @PutMapping
     InterviewAnswer update(@RequestBody InterviewAnswer answer) throws AccessDeniedException {
-        if(answer.getApproveStatus() != null)  {
+        if(ApproveStatus.APPROVED.equals(answer.getApproveStatus()))  {
             throw new AccessDeniedException(StConstant.FORBIDDEN_EXCEPTION);
         }
         return service.update(answer, isAdmin());

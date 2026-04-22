@@ -34,7 +34,9 @@ public class InterviewAnswerServiceImpl implements InterviewAnswerService {
         if(!isAdmin && ans != null && ApproveStatus.APPROVED.equals(ans.getApproveStatus())) {
             throw new InvalidStateException(YOU_CANNOT_UPDATE_AN_APPROVED_ANSWER);
         }
-        return repository.save(answer);
+        assert ans != null;
+        ans.setAnswer(answer.getAnswer());
+        return repository.save(ans);
     }
 
     @Override

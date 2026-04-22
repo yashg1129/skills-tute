@@ -40,8 +40,22 @@ public class AdminInterviewQuestionServiceImpl implements AdminInterviewQuestion
     public InterviewQuestion update(InterviewQuestionRequest request) throws AccessDeniedException {
         InterviewQuestion question = repository.findById(request.getId()).orElse(null);
         assert question != null;
+        String topicName = request.getTopic().getName();
+        if(!topicName.equals(question.getTopic().getName())) {
+            Topic topic = topicRepository.findByName(topicName);
+            if(topic == null) {
+                topic = new Topic();
+                topic.setName(topicName);
+                Integer id = topicRepository.findMaxId();
+                topic.setDisplayOrder(id + 1);
+                topic.setTutorial(false);
+                topic = topicRepository.save(topic);
+            }
+            question.setTopic(topic);
+        } else {
+            question.setTopic(request.getTopic());
+        }
         question.setQuestion(request.getQuestion());
-        question.setTopic(request.getTopic());
         question.setApproveStatus(ApproveStatus.valueOf(request.getApproveStatus()));
 
         return repository.save(question);

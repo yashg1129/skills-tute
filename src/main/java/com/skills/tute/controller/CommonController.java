@@ -19,10 +19,10 @@ public class CommonController {
     @Autowired
     private CommonService service;
 
-    @GetMapping("/companies")
-    List<Company> getCompanies() {
-        return service.getCompanies();
-    }
+//    @GetMapping("/companies")
+//    List<Company> getCompanies() {
+//        return service.getCompanies();
+//    }
 
     @GetMapping("/countries")
     List<Country> getCountries() {

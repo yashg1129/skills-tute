@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface CommonService {
 
-    List<Company> getCompanies();
+    //List<Company> getCompanies();
 
     List<Country> getCountries();
 

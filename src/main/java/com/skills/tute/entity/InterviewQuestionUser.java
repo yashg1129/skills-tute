@@ -29,7 +29,7 @@ public class InterviewQuestionUser {
     private Integer userId;
 
     @ManyToOne
-    @JoinColumn(name = "company_id")
+    @JoinColumn(nullable = false, name = "company_id")
     private Company company;
 
     @ManyToOne
@@ -138,4 +138,6 @@ public class InterviewQuestionUser {
     public void setDate(LocalDate date) {
         this.date = date;
     }
+
+
 }

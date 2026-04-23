@@ -13,6 +13,7 @@ public class InterviewQuestionRequest {
     private Integer userId;
     private Integer experience;
     private String question;
+    private String program;
 
     private Topic topic;
     private Company company;
@@ -22,6 +23,14 @@ public class InterviewQuestionRequest {
     //admin
     private String approveStatus;
     private Integer askCount;
+
+    public String getProgram() {
+        return program;
+    }
+
+    public void setProgram(String program) {
+        this.program = program;
+    }
 
     public Integer getId() {
         return id;

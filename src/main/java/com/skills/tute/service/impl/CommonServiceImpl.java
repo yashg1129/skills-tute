@@ -53,7 +53,7 @@ public class CommonServiceImpl implements CommonService {
     public Topic getTopicForUpdate(InterviewQuestionRequest request, InterviewQuestion question) {
         Topic topic;
         String topicName = request.getTopic().getName();
-        if(!topicName.equals(question.getTopic().getName())) {
+        if(request.getTopic().getId() != null && (question == null || !topicName.equals(question.getTopic().getName()))) {
             topic = topicRepository.findByName(topicName);
             if(topic == null) {
                 topic = new Topic();
@@ -63,6 +63,7 @@ public class CommonServiceImpl implements CommonService {
                 topic.setTutorial(false);
                 topic = topicRepository.save(topic);
             }
+            Cache.clearTopics();
         } else {
             topic = request.getTopic();
         }
@@ -73,13 +74,14 @@ public class CommonServiceImpl implements CommonService {
     public Company getCompanyForUpdate(InterviewQuestionRequest request, InterviewQuestionUser question) {
         Company company;
         String companyName = request.getCompany().getName();
-        if(!companyName.equals(question.getCompany().getName())) {
+        if(request.getCompany().getId() != null && (question == null || !companyName.equals(question.getCompany().getName()))) {
             company = companyRepository.findByName(companyName);
             if(company == null) {
                 company = new Company();
                 company.setName(companyName);
                 company = companyRepository.save(company);
             }
+            Cache.clearCompanies();
         } else {
             company = request.getCompany();
         }

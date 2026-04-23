@@ -14,7 +14,6 @@ import java.util.List;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    @Setter
     private String token;
 
     @Autowired

@@ -13,13 +13,9 @@ import java.util.List;
 
 public final class Cache {
 
-    @Getter
     private static List<Topic> topics;
-    @Getter
     private static List<Company> companies;
-    @Getter
     private static List<Country> countries;
-    @Getter
     private static List<City> cities;
 
     public static void setTopics(List<Topic> topics) {

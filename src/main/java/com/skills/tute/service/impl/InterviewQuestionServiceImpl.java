@@ -52,6 +52,9 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
     @Autowired
     private CommonService commonService;
 
+    @Autowired
+    private ProgrammingInterviewQuestionRepository programmingInterviewQuestionRepository;
+
     @Transactional
     @Override
     public InterviewQuestion save(InterviewQuestionRequest request) {
@@ -62,24 +65,7 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
         InterviewQuestion question = new InterviewQuestion();
         question.setId(request.getId());
 
-        Topic topic = request.getTopic();
-        if (topic.getId() == null && isNotBlank(topic.getName())) {
-            topic.setName(topic.getName());
-            Topic res = topicRepository.findByName(topic.getName());
-            if(res != null) {
-                topic = res;
-            } else {
-                Integer displayOrder = topicRepository.findMaxId();
-                if (displayOrder == null) {
-                    displayOrder = 0;
-                }
-                topic.setDisplayOrder(++displayOrder);
-                topic.setApproveStatus(ApproveStatus.PENDING);
-                topic.setTutorial(false);
-                topic = topicRepository.save(topic);
-                Cache.clearTopics();
-            }
-        }
+        Topic topic = commonService.getTopicForUpdate(request, null);
         question.setTopic(topic);
 
         saveQuestion(request, topic);
@@ -103,11 +89,16 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
             interviewQuestion.setAskCount(1);
             interviewQuestion.setDate(LocalDateTime.now());
             interviewQuestion = repository.save(interviewQuestion);
+            if(request.getProgram() != null) {
+                ProgrammingInterviewQuestion programmingInterviewQuestion = new ProgrammingInterviewQuestion();
+                programmingInterviewQuestion.setProgram(request.getProgram());
+                programmingInterviewQuestion.setInterviewQuestion(interviewQuestion);
+                programmingInterviewQuestionRepository.save(programmingInterviewQuestion);
+            }
         } else {
             interviewQuestion.setAskCount(interviewQuestion.getAskCount() + 1);
             repository.save(interviewQuestion);
         }
-
         saveInterviewQuestionUser(interviewQuestion, request);
     }
 
@@ -116,20 +107,7 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
         interviewQuestionUser.setInterviewQuestion(interviewQuestion);
         interviewQuestionUser.setUserId(request.getUserId());
 
-        Company company = request.getCompany();
-        if (company.getId() == null && isNotBlank(company.getName())) {
-            Company com = companyRepository.findByName(company.getName());
-            if(com != null) {
-                company = com;
-            } else {
-                company = new Company();
-                company.setName(request.getCompany().getName());
-                company.setApproveStatus(ApproveStatus.PENDING);
-                company = companyRepository.save(company);
-
-                Cache.clearCompanies();
-            }
-        }
+        Company company = commonService.getCompanyForUpdate(request, null);
         interviewQuestionUser.setCompany(company);
 
         City city = request.getCity();

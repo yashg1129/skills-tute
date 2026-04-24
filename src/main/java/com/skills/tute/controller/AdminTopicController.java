@@ -15,19 +15,19 @@ public class AdminTopicController {
     @Autowired
     private TopicService service;
 
-    @GetMapping("/admin")
+    @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     List<Topic> findAll(@RequestParam("approveStatus") String approveStatus) {
         return service.findByApproveStatus(approveStatus);
     }
 
-    @PutMapping("/admin")
+    @PutMapping
     @PreAuthorize("hasRole('ADMIN')")
     Topic update(@RequestBody Topic topic) {
         return service.update(topic);
     }
 
-    @DeleteMapping("/admin/{id}")
+    @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     void delete(@PathVariable("id") Integer id) {
         service.deleteById(id);

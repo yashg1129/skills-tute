@@ -11,6 +11,6 @@ import java.util.List;
 public interface InterviewQuestionUserRepository extends JpaRepository<InterviewQuestionUser, Integer> {
 
     InterviewQuestionUser findByInterviewQuestionAndUserIdAndCompanyAndDate(InterviewQuestion question, Integer userId, Company company, LocalDate date);
-    List<InterviewQuestionUser> findByUserId(Integer userId);
+    List<InterviewQuestionUser> findTop50ByUserIdOrderByIdDesc(Integer userId);
     void deleteByInterviewQuestion(Integer questionId);
 }

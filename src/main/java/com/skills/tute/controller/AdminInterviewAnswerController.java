@@ -4,17 +4,19 @@ import com.skills.tute.entity.InterviewAnswer;
 import com.skills.tute.enums.ApproveStatus;
 import com.skills.tute.exception.PermissionDeniedException;
 import com.skills.tute.service.InterviewAnswerService;
+import com.skills.tute.utils.StConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 import static com.skills.tute.utils.SecurityUtils.getUserId;
 import static com.skills.tute.utils.SecurityUtils.isAdmin;
 
 @RestController
-@RequestMapping("/api/interview-answers/admin")
+@RequestMapping("/api/admin/interview-answers")
 public class AdminInterviewAnswerController {
 
     @Autowired
@@ -23,7 +25,7 @@ public class AdminInterviewAnswerController {
     @PutMapping
     @PreAuthorize("hasRole('ADMIN')")
     InterviewAnswer update(@RequestBody InterviewAnswer answer) {
-        return service.update(answer, isAdmin());
+        return service.update(answer, true);
     }
 
     @GetMapping
@@ -33,14 +35,10 @@ public class AdminInterviewAnswerController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     InterviewAnswer findById(@PathVariable("id") Integer id) {
         return service.findById(id);
     }
-
-//    @GetMapping("/question/{id}")
-//    List<InterviewAnswer> findByApprovedAnswerQuestionId(@PathVariable("id") Integer questionId) {
-//        return service.findByApprovedAnswerQuestionId(questionId);
-//    }
 
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")

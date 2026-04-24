@@ -8,6 +8,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class HomeController {
 
+    @GetMapping
+    public ResponseEntity<String> hell() {
+        return ResponseEntity.ok("Hello API accessed");
+    }
+
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/api/user")
     public ResponseEntity<String> userApi() {

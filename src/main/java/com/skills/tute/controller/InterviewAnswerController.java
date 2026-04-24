@@ -22,42 +22,9 @@ public class InterviewAnswerController {
     @Autowired
     private InterviewAnswerService service;
 
-    @PostMapping
-    @PreAuthorize("hasRole('USER')")
-    InterviewAnswer save(@RequestBody InterviewAnswer answer) throws BadRequestException {
-        if(answer.getId() != null) {
-            throw new BadRequestException("Invalid request");
-        }
-        answer.setUserId(getUserId());
-        return service.save(answer);
-    }
-
-    @PutMapping
-    InterviewAnswer update(@RequestBody InterviewAnswer answer) throws AccessDeniedException {
-        if(ApproveStatus.APPROVED.equals(answer.getApproveStatus()))  {
-            throw new AccessDeniedException(StConstant.FORBIDDEN_EXCEPTION);
-        }
-        return service.update(answer, isAdmin());
-    }
-
-    @GetMapping
-    @PreAuthorize("hasRole('USER')")
-    List<InterviewAnswer> findAll() {
-        return service.findByUserId(getUserId());
-    }
-
-    @GetMapping("/{id}")
-    InterviewAnswer findById(@PathVariable("id") Integer id) {
-        return service.findById(id);
-    }
-
     @GetMapping("/question/{id}")
     List<InterviewAnswer> findByQuestionId(@PathVariable("id") Integer questionId) {
         return service.findByApprovedAnswerQuestionId(questionId);
     }
 
-    @DeleteMapping("/{id}")
-    void deleteById(@PathVariable("id") Integer id) {
-        service.deleteByUserIdAndId(getUserId(), id);
-    }
 }

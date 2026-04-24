@@ -9,16 +9,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/companies")
-public class CompanyController {
+@RequestMapping("/api/admin/companies")
+public class AdminCompanyController {
 
     @Autowired
     private CompanyService service;
-
-    @GetMapping
-    public List<Company> getCompanies(@RequestParam String approveStatus) {
-        return service.getCompanies(approveStatus);
-    }
 
     @PutMapping
     @PreAuthorize("hasRole('ADMIN')")

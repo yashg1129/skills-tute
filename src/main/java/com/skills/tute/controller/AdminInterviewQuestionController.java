@@ -11,7 +11,7 @@ import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/interview-questions/admin")
+@RequestMapping("api/admin/interview-questions")
 public class AdminInterviewQuestionController {
 
     @Autowired

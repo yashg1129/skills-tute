@@ -13,7 +13,7 @@ public interface InterviewAnswerRepository extends JpaRepository<InterviewAnswer
 
     List<InterviewAnswer> findByApproveStatus(ApproveStatus approveStatus);
 
-    List<InterviewAnswer> findByUserId(Integer userId);
+    List<InterviewAnswer> findTop50ByUserIdOrderByIdDesc(Integer userId);
 
     void deleteByIdAndUserId(Integer id, Integer userId);
 

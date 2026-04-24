@@ -68,7 +68,7 @@ public class InterviewAnswerServiceImpl implements InterviewAnswerService {
 
     @Override
     public List<InterviewAnswer> findByUserId(Integer userId) {
-        return repository.findByUserId(userId);
+        return repository.findTop50ByUserIdOrderByIdDesc(userId);
     }
 
     @Override

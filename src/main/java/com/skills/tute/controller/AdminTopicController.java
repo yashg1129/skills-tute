@@ -1,9 +1,7 @@
 package com.skills.tute.controller;
 
 import com.skills.tute.entity.Topic;
-import com.skills.tute.enums.ApproveStatus;
 import com.skills.tute.service.TopicService;
-import com.skills.tute.utils.StConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -11,16 +9,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/topics")
-public class TopicController {
+@RequestMapping("/api/admin/topics")
+public class AdminTopicController {
 
     @Autowired
     private TopicService service;
-
-    @GetMapping
-    List<Topic> findApprovedTopics(@RequestParam("tutorial") Boolean isTutorial) {
-        return service.findByApprovedStatus(isTutorial);
-    }
 
     @GetMapping("/admin")
     @PreAuthorize("hasRole('ADMIN')")

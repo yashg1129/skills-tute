@@ -173,8 +173,9 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
         interviewQuestionUser.setInterviewQuestion(question);
 
         repository.save(question);
+
         ProgrammingInterviewQuestion programmingQuestion = question.getProgrammingQuestion();
-        if(programmingQuestion.getProgram() != null) {
+        if(programmingQuestion != null && programmingQuestion.getProgram() != null) {
             programmingQuestion.setProgram(interviewQuestionRequest.getProgrammingQuestion().getProgram());
             programmingQuestionRepository.save(programmingQuestion);
         }
@@ -189,7 +190,8 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
 
     @Override
     public List<InterviewQuestionUser> findAll(String approval, Integer userId) {
-        return interviewQuestionUserRepository.findByUserId(userId);
+
+        return interviewQuestionUserRepository.findTop50ByUserIdOrderByIdDesc(userId);
     }
 
     @Override

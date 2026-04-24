@@ -32,7 +32,7 @@ public class CommonServiceImpl implements CommonService {
     @Override
     public List<Country> getCountries() {
         List<Country> countries = Cache.getCountries();
-        if(countries == null) {
+        if (countries == null) {
             countries = countryRepository.findAll();
             Cache.setCountries(countries);
         }
@@ -42,7 +42,7 @@ public class CommonServiceImpl implements CommonService {
     @Override
     public List<City> getCities() {
         List<City> cities = Cache.getCities();
-        if(cities == null) {
+        if (cities == null) {
             cities = cityRepository.findAll();
             Cache.setCities(cities);
         }
@@ -50,40 +50,39 @@ public class CommonServiceImpl implements CommonService {
     }
 
     @Override
-    public Topic getTopicForUpdate(InterviewQuestionRequest request, InterviewQuestion question) {
+    public Topic getTopicForUpdate(Topic request) {
         Topic topic;
-        String topicName = request.getTopic().getName();
-        if(request.getTopic().getId() != null && (question == null || !topicName.equals(question.getTopic().getName()))) {
-            topic = topicRepository.findByName(topicName);
-            if(topic == null) {
+        if (request.getId() != null) {
+            topic = request;
+        } else {
+            topic = topicRepository.findByName(request.getName());
+            if (topic == null) {
                 topic = new Topic();
-                topic.setName(topicName);
+                topic.setName(request.getName());
                 Integer id = topicRepository.findMaxId();
                 topic.setDisplayOrder(id + 1);
                 topic.setTutorial(false);
                 topic = topicRepository.save(topic);
             }
             Cache.clearTopics();
-        } else {
-            topic = request.getTopic();
         }
         return topic;
     }
 
     @Override
-    public Company getCompanyForUpdate(InterviewQuestionRequest request, InterviewQuestionUser question) {
+    public Company getCompanyForUpdate(Company request) {
         Company company;
-        String companyName = request.getCompany().getName();
-        if(request.getCompany().getId() != null && (question == null || !companyName.equals(question.getCompany().getName()))) {
+        if (request.getId() != null) {
+            company = request;
+        } else {
+            String companyName = request.getName();
             company = companyRepository.findByName(companyName);
-            if(company == null) {
+            if (company == null) {
                 company = new Company();
                 company.setName(companyName);
                 company = companyRepository.save(company);
             }
             Cache.clearCompanies();
-        } else {
-            company = request.getCompany();
         }
         return company;
     }

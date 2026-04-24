@@ -32,12 +32,12 @@ public class InterviewQuestionController {
 
     @PutMapping
     @PreAuthorize("hasRole('USER')")
-    InterviewQuestion update(@RequestBody InterviewQuestionRequest questionRequest) throws AccessDeniedException {
-        if(ApproveStatus.APPROVED.name().equals(questionRequest.getApproveStatus()))  {
+    InterviewQuestionUser update(@RequestBody InterviewQuestionUser interviewQuestionUser) throws AccessDeniedException {
+        if(ApproveStatus.APPROVED.equals(interviewQuestionUser.getInterviewQuestion().getApproveStatus()))  {
             throw new AccessDeniedException(StConstant.FORBIDDEN_EXCEPTION);
         }
-        questionRequest.setUserId(getUserId());
-        return service.update(questionRequest);
+        interviewQuestionUser.setUserId(getUserId());
+        return service.update(interviewQuestionUser);
     }
 
     @GetMapping

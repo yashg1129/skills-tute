@@ -32,6 +32,9 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
     private InterviewQuestionRepository repository;
 
     @Autowired
+    private InterviewQuestionUserRepository questionUserRepository;
+
+    @Autowired
     private AdminInterviewQuestionService adminInterviewQuestionService;
 
     @Autowired
@@ -53,7 +56,7 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
     private CommonService commonService;
 
     @Autowired
-    private ProgrammingInterviewQuestionRepository programmingInterviewQuestionRepository;
+    private ProgrammingInterviewQuestionRepository programmingQuestionRepository;
 
     @Transactional
     @Override
@@ -65,7 +68,7 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
         InterviewQuestion question = new InterviewQuestion();
         question.setId(request.getId());
 
-        Topic topic = commonService.getTopicForUpdate(request, null);
+        Topic topic = commonService.getTopicForUpdate(request.getTopic());
         question.setTopic(topic);
 
         saveQuestion(request, topic);
@@ -75,7 +78,7 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
 
     private void saveQuestion(InterviewQuestionRequest request, Topic topic) {
         InterviewQuestion interviewQuestion;
-        if(request.getId() != null) {
+        if (request.getId() != null) {
             interviewQuestion = repository.findById(request.getId()).orElse(null);
         } else {
             interviewQuestion = repository.findByQuestionAndTopic(request.getQuestion(), topic);
@@ -89,11 +92,11 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
             interviewQuestion.setAskCount(1);
             interviewQuestion.setDate(LocalDateTime.now());
             interviewQuestion = repository.save(interviewQuestion);
-            if(request.getProgram() != null) {
+            if (request.getProgram() != null) {
                 ProgrammingInterviewQuestion programmingInterviewQuestion = new ProgrammingInterviewQuestion();
                 programmingInterviewQuestion.setProgram(request.getProgram());
                 programmingInterviewQuestion.setInterviewQuestion(interviewQuestion);
-                programmingInterviewQuestionRepository.save(programmingInterviewQuestion);
+                programmingQuestionRepository.save(programmingInterviewQuestion);
             }
         } else {
             interviewQuestion.setAskCount(interviewQuestion.getAskCount() + 1);
@@ -107,11 +110,11 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
         interviewQuestionUser.setInterviewQuestion(interviewQuestion);
         interviewQuestionUser.setUserId(request.getUserId());
 
-        Company company = commonService.getCompanyForUpdate(request, null);
+        Company company = commonService.getCompanyForUpdate(request.getCompany());
         interviewQuestionUser.setCompany(company);
 
         City city = request.getCity();
-        if (city.getId() == null && isNotBlank(city.getName())) {
+        if (city != null && city.getId() == null && isNotBlank(city.getName())) {
             city = new City();
             city.setName(firstCharCaps(city.getName()));
             city.setApproveStatus(ApproveStatus.PENDING);
@@ -123,7 +126,7 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
         interviewQuestionUser.setCity(city);
 
         Country country = request.getCountry();
-        if (country.getId() == null && isNotBlank(country.getName())) {
+        if (country != null && country.getId() == null && isNotBlank(country.getName())) {
             country = new Country();
             country.setName(firstCharCaps(country.getName()));
             country.setApproveStatus(ApproveStatus.PENDING);
@@ -136,7 +139,7 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
         interviewQuestionUser.setDate(LocalDate.now());
 
         InterviewQuestionUser questionUser = interviewQuestionUserRepository.findByInterviewQuestionAndUserIdAndCompanyAndDate(interviewQuestion, interviewQuestionUser.getUserId(), interviewQuestionUser.getCompany(), LocalDate.now());
-        if(questionUser != null) {
+        if (questionUser != null) {
             throw new DuplicateResourceException(DUPLICATION_QUESTION);
         }
         interviewQuestionUserRepository.save(interviewQuestionUser);
@@ -144,25 +147,39 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
 
     @Override
     @Transactional
-    public InterviewQuestion update(InterviewQuestionRequest request) throws AccessDeniedException {
-        InterviewQuestion question = repository.findById(request.getId()).orElse(null);
-        assert question != null;
-        if(ApproveStatus.APPROVED.equals(question.getApproveStatus())) {
+    public InterviewQuestionUser update(InterviewQuestionUser request) throws AccessDeniedException {
+        InterviewQuestionUser questionUser = questionUserRepository.findById(request.getId()).orElse(null);
+
+        assert questionUser != null;
+        InterviewQuestion question = questionUser.getInterviewQuestion();
+
+        if (ApproveStatus.APPROVED.equals(question.getApproveStatus())) {
             throw new AccessDeniedException(StConstant.FORBIDDEN_EXCEPTION);
         }
-        question.setQuestion(request.getQuestion());
-        Topic topic = commonService.getTopicForUpdate(request, question);
+        InterviewQuestion interviewQuestionRequest = request.getInterviewQuestion();
+        question.setQuestion(interviewQuestionRequest.getQuestion());
+        Topic topic = commonService.getTopicForUpdate(interviewQuestionRequest.getTopic());
         question.setTopic(topic);
         question.setApproveStatus(ApproveStatus.PENDING);
 
-        InterviewQuestionUser interviewQuestionUser = interviewQuestionUserRepository.findById(question.getId()).orElse(null);
+        InterviewQuestionUser interviewQuestionUser = interviewQuestionUserRepository.findById(request.getId()).orElse(null);
 
-        assert interviewQuestionUser != null;
-        Company company = commonService.getCompanyForUpdate(request, interviewQuestionUser);
+        Company company = commonService.getCompanyForUpdate(request.getCompany());
+        if (interviewQuestionUser == null) {
+            interviewQuestionUser = new InterviewQuestionUser();
+        }
         interviewQuestionUser.setCompany(company);
-        interviewQuestionUserRepository.save(interviewQuestionUser);
+        interviewQuestionUser.setUserId(request.getUserId());
+        interviewQuestionUser.setInterviewQuestion(question);
 
-        return repository.save(question);
+        repository.save(question);
+        ProgrammingInterviewQuestion programmingQuestion = question.getProgrammingQuestion();
+        if(programmingQuestion.getProgram() != null) {
+            programmingQuestion.setProgram(interviewQuestionRequest.getProgrammingQuestion().getProgram());
+            programmingQuestionRepository.save(programmingQuestion);
+        }
+
+        return interviewQuestionUserRepository.save(interviewQuestionUser);
     }
 
     @Override
@@ -193,7 +210,7 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
         assert interviewQuestionUser != null;
         InterviewQuestion question = repository.findById(interviewQuestionUser.getInterviewQuestion().getId()).orElse(null);
         assert question != null;
-        if(ApproveStatus.APPROVED.equals(question.getApproveStatus())) {
+        if (ApproveStatus.APPROVED.equals(question.getApproveStatus())) {
             throw new InvalidStateException("You cannot delete an approved question.");
         }
         repository.deleteById(userQuestionId);

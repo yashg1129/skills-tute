@@ -12,6 +12,5 @@ public interface InterviewQuestionUserRepository extends JpaRepository<Interview
 
     InterviewQuestionUser findByInterviewQuestionAndUserIdAndCompanyAndDate(InterviewQuestion question, Integer userId, Company company, LocalDate date);
     List<InterviewQuestionUser> findByUserId(Integer userId);
-    List<InterviewQuestionUser> findByUserIdAndInterviewQuestionDate(Integer userId, InterviewQuestion question);
     void deleteByInterviewQuestion(Integer questionId);
 }

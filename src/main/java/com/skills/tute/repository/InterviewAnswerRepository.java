@@ -16,4 +16,6 @@ public interface InterviewAnswerRepository extends JpaRepository<InterviewAnswer
     List<InterviewAnswer> findByUserId(Integer userId);
 
     void deleteByIdAndUserId(Integer id, Integer userId);
+
+    boolean existsByInterviewQuestionAndAnswer(InterviewQuestion interviewQuestion, String answer);
 }

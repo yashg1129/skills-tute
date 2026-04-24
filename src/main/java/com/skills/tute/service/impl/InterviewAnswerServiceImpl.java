@@ -3,6 +3,7 @@ package com.skills.tute.service.impl;
 import com.skills.tute.entity.InterviewAnswer;
 import com.skills.tute.entity.InterviewQuestion;
 import com.skills.tute.enums.ApproveStatus;
+import com.skills.tute.exception.DuplicateResourceException;
 import com.skills.tute.exception.InvalidStateException;
 import com.skills.tute.repository.InterviewAnswerRepository;
 import com.skills.tute.service.InterviewAnswerService;
@@ -25,6 +26,10 @@ public class InterviewAnswerServiceImpl implements InterviewAnswerService {
     @Override
     public InterviewAnswer save(InterviewAnswer answer) {
         answer.setDate(LocalDateTime.now());
+        boolean isExists = repository.existsByInterviewQuestionAndAnswer(answer.getInterviewQuestion(), answer.getAnswer());
+        if(isExists) {
+            throw new DuplicateResourceException("Duplicate Answer");
+        }
         return repository.save(answer);
     }
 

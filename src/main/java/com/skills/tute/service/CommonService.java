@@ -13,7 +13,7 @@ public interface CommonService {
 
     List<City> getCities();
 
-    Topic getTopicForUpdate(InterviewQuestionRequest request, InterviewQuestion question);
+    Topic getTopicForUpdate(Topic request);
 
-    Company getCompanyForUpdate(InterviewQuestionRequest request, InterviewQuestionUser question);
+    Company getCompanyForUpdate(Company request);
 }

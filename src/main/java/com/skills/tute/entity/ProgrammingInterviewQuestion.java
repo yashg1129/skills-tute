@@ -1,5 +1,6 @@
 package com.skills.tute.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
@@ -14,6 +15,7 @@ public class ProgrammingInterviewQuestion {
     private String program;
 
     @OneToOne
+    @JsonIgnore
     @JoinColumn(name = "question_id", nullable = false)
     private InterviewQuestion interviewQuestion;
 

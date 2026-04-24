@@ -10,7 +10,7 @@ import java.util.List;
 public interface InterviewQuestionService {
 
     InterviewQuestion save(InterviewQuestionRequest question);
-    InterviewQuestion update(InterviewQuestionRequest question) throws AccessDeniedException;
+    InterviewQuestionUser update(InterviewQuestionUser question) throws AccessDeniedException;
     InterviewQuestion findById(Integer id);
     List<InterviewQuestionUser> findAll(String approval, Integer userId);
     List<InterviewQuestion> findByTopicId(Integer id);

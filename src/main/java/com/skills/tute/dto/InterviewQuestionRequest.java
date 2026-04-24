@@ -1,9 +1,6 @@
 package com.skills.tute.dto;
 
-import com.skills.tute.entity.City;
-import com.skills.tute.entity.Company;
-import com.skills.tute.entity.Country;
-import com.skills.tute.entity.Topic;
+import com.skills.tute.entity.*;
 import lombok.Data;
 
 @Data
@@ -12,8 +9,8 @@ public class InterviewQuestionRequest {
     private Integer id;
     private Integer userId;
     private Integer experience;
-    private String question;
     private String program;
+    private String question;
 
     private Topic topic;
     private Company company;
@@ -23,6 +20,14 @@ public class InterviewQuestionRequest {
     //admin
     private String approveStatus;
     private Integer askCount;
+
+    public String getQuestion() {
+        return question;
+    }
+
+    public void setQuestion(String question) {
+        this.question = question;
+    }
 
     public String getProgram() {
         return program;
@@ -54,14 +59,6 @@ public class InterviewQuestionRequest {
 
     public void setExperience(Integer experience) {
         this.experience = experience;
-    }
-
-    public String getQuestion() {
-        return question;
-    }
-
-    public void setQuestion(String question) {
-        this.question = question;
     }
 
     public Topic getTopic() {

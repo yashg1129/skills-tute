@@ -20,11 +20,14 @@ public class InterviewQuestion {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private ApproveStatus approveStatus = ApproveStatus.PENDING;
+    private ApproveStatus approveStatus;
 
     @ManyToOne
     @JoinColumn(name = "topic_id", nullable = false)
     private Topic topic;
+
+    @OneToOne(mappedBy = "interviewQuestion")
+    private ProgrammingInterviewQuestion programmingQuestion;
 
     @Column(name = "ask_count", nullable = false)
     private Integer askCount;
@@ -38,6 +41,14 @@ public class InterviewQuestion {
 
     public InterviewQuestion(Integer id) {
         this.id = id;
+    }
+
+    public ProgrammingInterviewQuestion getProgrammingQuestion() {
+        return programmingQuestion;
+    }
+
+    public void setProgrammingQuestion(ProgrammingInterviewQuestion programmingQuestion) {
+        this.programmingQuestion = programmingQuestion;
     }
 
     public Integer getId() {

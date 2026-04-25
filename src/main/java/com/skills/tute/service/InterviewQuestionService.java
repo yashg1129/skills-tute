@@ -14,7 +14,7 @@ public interface InterviewQuestionService {
     InterviewQuestion findById(Integer id);
     List<InterviewQuestionUser> findAll(String approval, Integer userId);
     List<InterviewQuestion> findByTopicId(Integer id);
-    List<InterviewQuestion> findByTopicNameAndApproval(String name, String approval);
+    List<InterviewQuestion> findByTopicNameAndApproval(String name);
     void deleteById(Integer questionId, Integer questionUserId);
 
 }

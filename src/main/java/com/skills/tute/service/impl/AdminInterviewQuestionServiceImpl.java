@@ -9,6 +9,7 @@ import com.skills.tute.service.CommonService;
 import com.skills.tute.utils.StStringUtils;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.AccessDeniedException;
@@ -16,8 +17,6 @@ import java.util.List;
 
 @Service
 public class AdminInterviewQuestionServiceImpl implements AdminInterviewQuestionService {
-
-    public static final String DUPLICATION_QUESTION = "Duplication question";
 
     @Autowired
     private InterviewQuestionRepository repository;
@@ -32,9 +31,6 @@ public class AdminInterviewQuestionServiceImpl implements AdminInterviewQuestion
     private TopicRepository topicRepository;
 
     @Autowired
-    private CompanyRepository companyRepository;
-
-    @Autowired
     private CountryRepository countryRepository;
 
     @Autowired
@@ -44,6 +40,7 @@ public class AdminInterviewQuestionServiceImpl implements AdminInterviewQuestion
     private ProgrammingInterviewQuestionRepository programmingInterviewQuestionRepository;
 
     @Override
+    //@CacheEvict(value = "interview-questions", allEntries = true)
     public InterviewQuestion update(InterviewQuestionRequest request) throws AccessDeniedException {
         InterviewQuestion question = repository.findById(request.getId()).orElse(null);
         assert question != null;
@@ -71,8 +68,8 @@ public class AdminInterviewQuestionServiceImpl implements AdminInterviewQuestion
         return list;
     }
 
-    @Transactional
     @Override
+    //@CacheEvict(value = "interview-questions")
     public void deleteById(Integer questionId) {
         interviewQuestionUserRepository.deleteByInterviewQuestion(questionId);
         repository.deleteById(questionId);

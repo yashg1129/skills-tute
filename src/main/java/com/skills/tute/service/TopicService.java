@@ -6,11 +6,13 @@ import java.util.List;
 
 public interface TopicService {
 
+    Topic save(Topic topic);
+
     Topic update(Topic topic);
 
     List<Topic> findByApprovedStatus(boolean isTutorial);
 
-    List<Topic> findByApproveStatus(String approveStatus);
+    List<Topic> adminFindByApproveStatus(String approveStatus);
 
     void deleteById(Integer id);
 }

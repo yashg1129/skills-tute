@@ -18,7 +18,7 @@ public class AdminTopicController {
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     List<Topic> findAll(@RequestParam("approveStatus") String approveStatus) {
-        return service.findByApproveStatus(approveStatus);
+        return service.adminFindByApproveStatus(approveStatus);
     }
 
     @PutMapping

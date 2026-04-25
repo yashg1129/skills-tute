@@ -1,15 +1,15 @@
 package com.skills.tute.service.impl;
 
-import com.skills.tute.cache.Cache;
-
-import com.skills.tute.dto.InterviewQuestionRequest;
 import com.skills.tute.entity.*;
 import com.skills.tute.repository.CityRepository;
 import com.skills.tute.repository.CompanyRepository;
 import com.skills.tute.repository.CountryRepository;
 import com.skills.tute.repository.TopicRepository;
 import com.skills.tute.service.CommonService;
+import com.skills.tute.service.CompanyService;
+import com.skills.tute.service.TopicService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,7 +21,12 @@ public class CommonServiceImpl implements CommonService {
     private TopicRepository topicRepository;
 
     @Autowired
+    private TopicService topicService;
+
+    @Autowired
     private CompanyRepository companyRepository;
+
+    private CompanyService companyService;
 
     @Autowired
     private CountryRepository countryRepository;
@@ -30,23 +35,15 @@ public class CommonServiceImpl implements CommonService {
     private CityRepository cityRepository;
 
     @Override
+    @Cacheable("countries")
     public List<Country> getCountries() {
-        List<Country> countries = Cache.getCountries();
-        if (countries == null) {
-            countries = countryRepository.findAll();
-            Cache.setCountries(countries);
-        }
-        return countries;
+        return countryRepository.findAll();
     }
 
     @Override
+    @Cacheable("cities")
     public List<City> getCities() {
-        List<City> cities = Cache.getCities();
-        if (cities == null) {
-            cities = cityRepository.findAll();
-            Cache.setCities(cities);
-        }
-        return cities;
+        return cityRepository.findAll();
     }
 
     @Override
@@ -62,9 +59,8 @@ public class CommonServiceImpl implements CommonService {
                 Integer id = topicRepository.findMaxId();
                 topic.setDisplayOrder(id + 1);
                 topic.setTutorial(false);
-                topic = topicRepository.save(topic);
+                topic = topicService.save(topic);
             }
-            Cache.clearTopics();
         }
         return topic;
     }
@@ -80,9 +76,8 @@ public class CommonServiceImpl implements CommonService {
             if (company == null) {
                 company = new Company();
                 company.setName(companyName);
-                company = companyRepository.save(company);
+                company = companyService.save(company);
             }
-            Cache.clearCompanies();
         }
         return company;
     }

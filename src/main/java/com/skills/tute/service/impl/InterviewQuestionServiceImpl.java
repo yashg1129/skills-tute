@@ -1,6 +1,5 @@
 package com.skills.tute.service.impl;
 
-import com.skills.tute.cache.Cache;
 import com.skills.tute.dto.InterviewQuestionRequest;
 import com.skills.tute.entity.*;
 import com.skills.tute.enums.ApproveStatus;
@@ -14,6 +13,8 @@ import com.skills.tute.service.InterviewQuestionService;
 import com.skills.tute.utils.StConstant;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.AccessDeniedException;
@@ -27,6 +28,12 @@ import static com.skills.tute.utils.StStringUtils.*;
 public class InterviewQuestionServiceImpl implements InterviewQuestionService {
 
     public static final String DUPLICATION_QUESTION = "Duplication question";
+
+    @Value("${st.add.question.points}")
+    private Integer addQuestionPoints;
+
+    @Value("${st.update.question.points}")
+    private Integer updateQuestionPoints;
 
     @Autowired
     private InterviewQuestionRepository repository;
@@ -44,7 +51,7 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
     private TopicRepository topicRepository;
 
     @Autowired
-    private CompanyRepository companyRepository;
+    private CompanyRepository companyRepository1;
 
     @Autowired
     private CountryRepository countryRepository;
@@ -58,15 +65,14 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
     @Autowired
     private ProgrammingInterviewQuestionRepository programmingQuestionRepository;
 
-    @Transactional
     @Override
+    @Transactional
     public InterviewQuestion save(InterviewQuestionRequest request) {
         return copy(request);
     }
 
     private InterviewQuestion copy(InterviewQuestionRequest request) {
         InterviewQuestion question = new InterviewQuestion();
-        question.setId(request.getId());
 
         Topic topic = commonService.getTopicForUpdate(request.getTopic());
         question.setTopic(topic);
@@ -89,6 +95,7 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
             interviewQuestion.setApproveStatus(ApproveStatus.PENDING);
             interviewQuestion.setQuestion(request.getQuestion());
             interviewQuestion.setTopic(topic);
+            interviewQuestion.setPoints(addQuestionPoints);
             interviewQuestion.setAskCount(1);
             interviewQuestion.setDate(LocalDateTime.now());
             interviewQuestion = repository.save(interviewQuestion);
@@ -99,6 +106,7 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
                 programmingQuestionRepository.save(programmingInterviewQuestion);
             }
         } else {
+            interviewQuestion.setPoints(interviewQuestion.getPoints() + updateQuestionPoints);
             interviewQuestion.setAskCount(interviewQuestion.getAskCount() + 1);
             repository.save(interviewQuestion);
         }
@@ -119,7 +127,6 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
             city.setName(firstCharCaps(city.getName()));
             city.setApproveStatus(ApproveStatus.PENDING);
             city = cityRepository.save(city);
-            Cache.clearCities();
         } else {
             city = null;
         }
@@ -131,7 +138,6 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
             country.setName(firstCharCaps(country.getName()));
             country.setApproveStatus(ApproveStatus.PENDING);
             countryRepository.save(country);
-            Cache.clearCountries();
         } else {
             country = null;
         }
@@ -190,7 +196,6 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
 
     @Override
     public List<InterviewQuestionUser> findAll(String approval, Integer userId) {
-
         return interviewQuestionUserRepository.findTop50ByUserIdOrderByIdDesc(userId);
     }
 
@@ -201,9 +206,10 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
     }
 
     @Override
-    public List<InterviewQuestion> findByTopicNameAndApproval(String name, String approveStatus) {
+    @Cacheable("interview-questions")
+    public List<InterviewQuestion> findByTopicNameAndApproval(String name) {
         Topic topic = topicRepository.findByName(name);
-        return repository.findByTopicAndApproveStatus(topic, ApproveStatus.valueOf(approveStatus));
+        return repository.findByTopicAndApproveStatusOrderByPointsDesc(topic, ApproveStatus.APPROVED);
     }
 
     @Override

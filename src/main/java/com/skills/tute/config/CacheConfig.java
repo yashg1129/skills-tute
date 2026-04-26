@@ -15,12 +15,5 @@ public class CacheConfig {
     @Bean
     public CacheManager cacheManager() {
         return new ConcurrentMapCacheManager(caches.split(","));
-//        return new ConcurrentMapCacheManager(
-//                "topics",
-//                "companies",
-//                "interview-questions",
-//                "countries",
-//                "cities"
-//        );
     }
 }

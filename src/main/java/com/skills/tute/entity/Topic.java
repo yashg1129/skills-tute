@@ -2,15 +2,6 @@ package com.skills.tute.entity;
 
 import com.skills.tute.enums.ApproveStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
 
 @Entity
 @Table(name = "topics")
@@ -32,6 +23,17 @@ public class Topic {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ApproveStatus approveStatus = ApproveStatus.PENDING;
+
+    @Override
+    public boolean equals(Object obj) {
+        return this.id == ((Topic)obj).getId();
+    }
+
+    public Topic(){}
+
+    public Topic(Integer id) {
+        this.id = id;
+    }
 
     public Integer getId() {
         return id;

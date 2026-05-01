@@ -8,7 +8,6 @@ import jakarta.persistence.*;
 public class ProgrammingInterviewQuestion {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(nullable = false, columnDefinition = "TEXT")
@@ -16,7 +15,8 @@ public class ProgrammingInterviewQuestion {
 
     @OneToOne
     @JsonIgnore
-    @JoinColumn(name = "question_id", nullable = false)
+    @MapsId
+    @JoinColumn(name = "id")
     private InterviewQuestion interviewQuestion;
 
     public Integer getId() {

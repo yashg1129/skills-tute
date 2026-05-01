@@ -1,5 +1,6 @@
 package com.skills.tute.service.impl;
 
+import com.skills.tute.composite.key.TopicUserId;
 import com.skills.tute.entity.DefaultNotes;
 import com.skills.tute.entity.Notes;
 import com.skills.tute.entity.Topic;
@@ -31,15 +32,9 @@ public class NotesServiceImpl implements NotesService {
     @Override
     @Transactional
     public Notes save(Notes notes) {
-
-        Topic topic = commonService.getTopicForUpdate(notes.getTopic());
-        notes.setTopic(topic);
-
-        Topic defalutTopic = defaultNotesMap.get(notes.getUserId());
-        if(!defalutTopic.equals(topic)) {
-            saveDefaultNotes(topic, notes.getUserId());
-        }
-
+        TopicUserId id = notes.getId();
+        Topic topic = commonService.getTopicForUpdate(new Topic(id.getTopicId()));
+        id.setTopicId(topic.getId());
         return repository.save(notes);
     }
 
@@ -50,25 +45,7 @@ public class NotesServiceImpl implements NotesService {
 
     @Override
     public Notes findByTopicAndUserId(Integer topicId, Integer userId) {
-
-        Topic defalutTopic = defaultNotesMap.get(userId);
-        if(defalutTopic == null) {
-            DefaultNotes defaultNotes = defaultNotesRepository.findById(userId).orElse(new DefaultNotes());
-            defalutTopic = defaultNotes.getTopic();
-            defaultNotesMap.put(userId, defalutTopic);
-        }
-
-        Topic topic;
-        if(topicId == 0) {
-            topic = defalutTopic;
-        } else {
-            topic = new Topic(topicId);
-            if(!defalutTopic.equals(topic)) {
-                saveDefaultNotes(topic, userId);
-            }
-
-        }
-        return repository.findByTopicAndUserId(topic, userId);
+        return repository.findById(new TopicUserId(topicId, userId)).orElse(null);
     }
 
     private void saveDefaultNotes(Topic topic, Integer userId) {

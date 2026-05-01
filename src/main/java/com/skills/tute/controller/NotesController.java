@@ -1,5 +1,6 @@
 package com.skills.tute.controller;
 
+import com.skills.tute.dto.NotesRequest;
 import com.skills.tute.entity.Notes;
 import com.skills.tute.service.NotesService;
 import static com.skills.tute.utils.SecurityUtils.getUserId;
@@ -17,7 +18,7 @@ public class NotesController {
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     Notes save(@RequestBody Notes notes) {
-        notes.setUserId(getUserId());
+        notes.getId().setUserId(getUserId());
         return service.save(notes);
     }
 

@@ -10,7 +10,7 @@ public interface TopicService {
 
     Topic update(Topic topic);
 
-    List<Topic> findByApprovedStatus(boolean isTutorial);
+    List<Topic> findTopics(String type);
 
     List<Topic> adminFindByApproveStatus(String approveStatus);
 

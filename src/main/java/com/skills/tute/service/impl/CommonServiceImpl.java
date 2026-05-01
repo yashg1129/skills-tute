@@ -26,6 +26,7 @@ public class CommonServiceImpl implements CommonService {
     @Autowired
     private CompanyRepository companyRepository;
 
+    @Autowired
     private CompanyService companyService;
 
     @Autowired

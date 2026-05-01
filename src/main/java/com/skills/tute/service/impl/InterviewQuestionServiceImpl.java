@@ -180,9 +180,11 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
 
         repository.save(question);
 
-        ProgrammingInterviewQuestion programmingQuestion = question.getProgrammingQuestion();
+        ProgrammingInterviewQuestion programmingQuestion = request.getInterviewQuestion().getProgrammingQuestion();
         if(programmingQuestion != null && programmingQuestion.getProgram() != null) {
+            programmingQuestion.setId(question.getId());
             programmingQuestion.setProgram(interviewQuestionRequest.getProgrammingQuestion().getProgram());
+            programmingQuestion.setInterviewQuestion(question);
             programmingQuestionRepository.save(programmingQuestion);
         }
 

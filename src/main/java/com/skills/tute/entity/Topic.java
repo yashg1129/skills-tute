@@ -3,6 +3,8 @@ package com.skills.tute.entity;
 import com.skills.tute.enums.ApproveStatus;
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "topics")
 public class Topic {
@@ -24,12 +26,29 @@ public class Topic {
     @Column(nullable = false)
     private ApproveStatus approveStatus = ApproveStatus.PENDING;
 
+    @ManyToMany
+    @JoinTable(name = "topics_topic_types", joinColumns = @JoinColumn(name = "topic_id"), inverseJoinColumns = @JoinColumn(name = "topic_type_id"))
+    private List<TopicType> topicType;
+
     @Override
     public boolean equals(Object obj) {
-        return this.id == ((Topic)obj).getId();
+        return this.id == ((Topic) obj).getId();
     }
 
-    public Topic(){}
+    public Topic() {
+    }
+
+    public List<TopicType> getTopicType() {
+        return topicType;
+    }
+
+    public void setTopicType(List<TopicType> topicType) {
+        this.topicType = topicType;
+    }
+
+    public Boolean getTutorial() {
+        return tutorial;
+    }
 
     public Topic(Integer id) {
         this.id = id;

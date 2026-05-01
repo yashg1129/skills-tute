@@ -29,8 +29,8 @@ public class CommonController {
     private CompanyService commonService;
 
     @GetMapping("/topics")
-    List<Topic> findApprovedTopics(@RequestParam("tutorial") Boolean isTutorial) {
-        return topicService.findByApprovedStatus(isTutorial);
+    List<Topic> findTopics(@RequestParam("type") String type) {
+        return topicService.findTopics(type);
     }
 
     @GetMapping("/companies")

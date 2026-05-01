@@ -2,6 +2,7 @@ package com.skills.tute.service.impl;
 
 import com.skills.tute.entity.Topic;
 import com.skills.tute.enums.ApproveStatus;
+import com.skills.tute.enums.TopicTypeEnum;
 import com.skills.tute.repository.TopicRepository;
 import com.skills.tute.service.TopicService;
 import com.skills.tute.utils.StConstant;
@@ -31,12 +32,14 @@ public class TopicServiceImpl implements TopicService {
 
     @Override
     @Cacheable("topics")
-    public List<Topic> findByApprovedStatus(boolean isTutorial) {
+    public List<Topic> findTopics(String type) {
         List<Topic> list;
-        if(isTutorial) {
+        if(TopicTypeEnum.TUTORIAL.name().equals(type)) {
             list = repository.findByApproveStatusAndTutorialOrderByDisplayOrder(ApproveStatus.APPROVED, true);
-        } else {
+        } else if(TopicTypeEnum.INTERVIEW.name().equals(type)){
             list = repository.findByApproveStatusOrderByName(ApproveStatus.APPROVED);
+        } else {
+            list = repository.findAll();
         }
         return list;
     }

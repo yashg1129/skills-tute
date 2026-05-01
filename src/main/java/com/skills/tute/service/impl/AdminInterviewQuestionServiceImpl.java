@@ -6,10 +6,8 @@ import com.skills.tute.enums.ApproveStatus;
 import com.skills.tute.repository.*;
 import com.skills.tute.service.AdminInterviewQuestionService;
 import com.skills.tute.service.CommonService;
-import com.skills.tute.utils.StStringUtils;
-import jakarta.transaction.Transactional;
+import com.skills.tute.service.ProgrammingInterviewQuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.AccessDeniedException;
@@ -37,7 +35,7 @@ public class AdminInterviewQuestionServiceImpl implements AdminInterviewQuestion
     private CityRepository cityRepository;
 
     @Autowired
-    private ProgrammingInterviewQuestionRepository programmingInterviewQuestionRepository;
+    private ProgrammingInterviewQuestionService programmingInterviewQuestionService;
 
     @Override
     //@CacheEvict(value = "interview-questions", allEntries = true)
@@ -48,13 +46,11 @@ public class AdminInterviewQuestionServiceImpl implements AdminInterviewQuestion
         question.setTopic(topic);
         question.setQuestion(request.getQuestion());
         question.setApproveStatus(ApproveStatus.valueOf(request.getApproveStatus()));
-        String program = request.getProgram();
-        if(StStringUtils.isNotBlank(program)) {
-            ProgrammingInterviewQuestion prog = programmingInterviewQuestionRepository.findByInterviewQuestion(question);
-            prog.setProgram(program);
-            programmingInterviewQuestionRepository.save(prog);
-        }
-        return repository.save(question);
+
+        InterviewQuestion interviewQuestion = repository.save(question);
+        interviewQuestion.setProgrammingQuestion(programmingInterviewQuestionService.saveOrUpdate(new ProgrammingInterviewQuestion(request.getProgram()), question));
+
+        return interviewQuestion;
     }
 
     @Override

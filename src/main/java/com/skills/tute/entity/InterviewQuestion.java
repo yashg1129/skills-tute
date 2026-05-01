@@ -26,7 +26,7 @@ public class InterviewQuestion {
     @JoinColumn(name = "topic_id", nullable = false)
     private Topic topic;
 
-    @OneToOne(mappedBy = "interviewQuestion")
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "interviewQuestion")
     private ProgrammingInterviewQuestion programmingQuestion;
 
     @Column(name = "ask_count", nullable = false)

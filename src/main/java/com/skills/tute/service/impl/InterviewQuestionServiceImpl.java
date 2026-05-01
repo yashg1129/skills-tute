@@ -10,6 +10,7 @@ import com.skills.tute.service.AdminInterviewQuestionService;
 import com.skills.tute.service.CommonService;
 import com.skills.tute.service.InterviewQuestionService;
 
+import com.skills.tute.service.ProgrammingInterviewQuestionService;
 import com.skills.tute.utils.StConstant;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +65,9 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
 
     @Autowired
     private ProgrammingInterviewQuestionRepository programmingQuestionRepository;
+
+    @Autowired
+    private ProgrammingInterviewQuestionService programmingService;
 
     @Override
     @Transactional
@@ -180,13 +184,7 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
 
         repository.save(question);
 
-        ProgrammingInterviewQuestion programmingQuestion = request.getInterviewQuestion().getProgrammingQuestion();
-        if(programmingQuestion != null && programmingQuestion.getProgram() != null) {
-            programmingQuestion.setId(question.getId());
-            programmingQuestion.setProgram(interviewQuestionRequest.getProgrammingQuestion().getProgram());
-            programmingQuestion.setInterviewQuestion(question);
-            programmingQuestionRepository.save(programmingQuestion);
-        }
+        programmingService.saveOrUpdate(request.getInterviewQuestion().getProgrammingQuestion(), question);
 
         return interviewQuestionUserRepository.save(interviewQuestionUser);
     }

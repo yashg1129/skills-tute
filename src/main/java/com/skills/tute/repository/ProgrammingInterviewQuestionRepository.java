@@ -6,6 +6,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ProgrammingInterviewQuestionRepository extends JpaRepository<ProgrammingInterviewQuestion, Integer> {
 
-    ProgrammingInterviewQuestion findByInterviewQuestion(InterviewQuestion interviewQuestion);
-
 }

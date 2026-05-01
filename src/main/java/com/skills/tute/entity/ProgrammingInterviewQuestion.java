@@ -19,6 +19,13 @@ public class ProgrammingInterviewQuestion {
     @JoinColumn(name = "id")
     private InterviewQuestion interviewQuestion;
 
+    public ProgrammingInterviewQuestion() {
+    }
+
+    public ProgrammingInterviewQuestion(String program) {
+        this.setProgram(program);
+    }
+
     public Integer getId() {
         return id;
     }

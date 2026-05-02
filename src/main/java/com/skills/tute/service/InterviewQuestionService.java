@@ -1,6 +1,7 @@
 package com.skills.tute.service;
 
 import com.skills.tute.dto.InterviewQuestionRequest;
+import com.skills.tute.dto.InterviewQuestionResponse;
 import com.skills.tute.entity.InterviewQuestion;
 import com.skills.tute.entity.InterviewQuestionUser;
 
@@ -14,7 +15,7 @@ public interface InterviewQuestionService {
     InterviewQuestion findById(Integer id);
     List<InterviewQuestionUser> findAll(String approval, Integer userId);
     List<InterviewQuestion> findByTopicId(Integer id);
-    List<InterviewQuestion> findByTopicNameAndApproval(String name);
+    List<InterviewQuestionResponse> findByTopicNameAndApproval(String name, Integer userId);
     void deleteById(Integer questionId, Integer questionUserId);
 
 }

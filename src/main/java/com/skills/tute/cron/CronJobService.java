@@ -1,6 +1,7 @@
 package com.skills.tute.cron;
 
 import com.skills.tute.repository.InterviewQuestionRepository;
+import com.skills.tute.service.CacheService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,9 @@ public class CronJobService {
 
     @Autowired
     private InterviewQuestionRepository questionRepository;
+
+    @Autowired
+    private CacheService cacheService;
 
     //@Scheduled(cron = "*/15 * * * * *")
     @Scheduled(cron = "0 0 1 * * *", zone = "Asia/Kolkata")
@@ -43,5 +47,9 @@ public class CronJobService {
         System.out.println("Execution Time        : " + totalMs + " ms");
         System.out.println("Execution Time        : " + totalSec + " sec");
         System.out.println("====================================");
+    }
+
+    private void refreshCache() {
+        cacheService.refreshCaches();
     }
 }

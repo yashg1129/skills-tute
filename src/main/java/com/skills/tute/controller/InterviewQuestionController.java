@@ -1,7 +1,9 @@
 package com.skills.tute.controller;
 
+import com.skills.tute.dto.InterviewQuestionResponse;
 import com.skills.tute.entity.InterviewQuestion;
 import com.skills.tute.service.InterviewQuestionService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,6 +13,7 @@ import java.util.List;
 @RequestMapping("/api/interview-questions")
 public class InterviewQuestionController {
 
+    public static final String USER_ID = "userId";
     @Autowired
     private InterviewQuestionService service;
 
@@ -20,8 +23,9 @@ public class InterviewQuestionController {
     }
 
     @GetMapping("topic/name/{topicName}")
-    List<InterviewQuestion> findByTopicName(@PathVariable("topicName") String name, @RequestParam String approval) {
-        return service.findByTopicNameAndApproval(name);
+    //@PreAuthorize("hasRole('USER')")
+    List<InterviewQuestionResponse> findByTopicName(@PathVariable("topicName") String name, HttpSession session) {
+        return service.findByTopicNameAndApproval(name, (Integer)session.getAttribute(USER_ID));
     }
 
 }

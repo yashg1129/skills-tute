@@ -1,6 +1,7 @@
 package com.skills.tute.service.impl;
 
 import com.skills.tute.dto.InterviewQuestionRequest;
+import com.skills.tute.dto.InterviewQuestionResponse;
 import com.skills.tute.entity.*;
 import com.skills.tute.enums.ApproveStatus;
 import com.skills.tute.exception.DuplicateResourceException;
@@ -11,6 +12,7 @@ import com.skills.tute.service.CommonService;
 import com.skills.tute.service.InterviewQuestionService;
 
 import com.skills.tute.service.ProgrammingInterviewQuestionService;
+import com.skills.tute.utils.SecurityUtils;
 import com.skills.tute.utils.StConstant;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,8 @@ import java.nio.file.AccessDeniedException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.skills.tute.utils.StStringUtils.*;
 
@@ -68,6 +72,8 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
 
     @Autowired
     private ProgrammingInterviewQuestionService programmingService;
+
+    @Autowired LikeRepository likeRepository;
 
     @Override
     @Transactional
@@ -206,10 +212,38 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
     }
 
     @Override
-    @Cacheable("interview-questions")
-    public List<InterviewQuestion> findByTopicNameAndApproval(String name) {
+    @Cacheable(value = "interview-questions", key = "#name")
+    public List<InterviewQuestionResponse> findByTopicNameAndApproval(String name, Integer userId) {
         Topic topic = topicRepository.findByName(name);
-        return repository.findByTopicAndApproveStatusOrderByPointsDesc(topic, ApproveStatus.APPROVED);
+        return copy(repository.findByTopicAndApproveStatusOrderByPointsDesc(topic, ApproveStatus.APPROVED), userId);
+    }
+
+    private List<InterviewQuestionResponse> copy(List<InterviewQuestion> questions, Integer userId) {
+//        List<InterviewQuestionResponse> list = new ArrayList<>();
+        return questions.stream().map(question -> {
+            InterviewQuestionResponse res = new InterviewQuestionResponse();
+            res.setId(question.getId());
+            res.setQuestion(question.getQuestion());
+            ProgrammingInterviewQuestion programming = question.getProgrammingQuestion();
+            if(programming != null) {
+                res.setProgram(programming.getProgram());
+            }
+            res.setAskCount(question.getAskCount());
+
+            if(userId != null) {
+                //res.setPostedBy(q.);
+                Like like = likeRepository.findByInterviewQuestionAndUserId(question, userId);
+                res.setUserLike(like != null ? like.getUserLike() : null);
+            }
+
+            Map<Boolean, Long> likes = question.getLikes().stream().filter(like -> like.getUserLike() != null).collect(
+                    Collectors.groupingBy(Like::getUserLike, Collectors.counting()));
+            res.setLikes(likes.get(Boolean.TRUE));
+            res.setDislikes(likes.get(Boolean.FALSE));
+            res.setTopicName(question.getTopic().getName());
+
+            return res;
+        }).toList();
     }
 
     @Override

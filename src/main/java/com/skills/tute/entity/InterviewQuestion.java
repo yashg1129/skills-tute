@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Entity
@@ -29,6 +30,9 @@ public class InterviewQuestion {
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "interviewQuestion")
     private ProgrammingInterviewQuestion programmingQuestion;
 
+    @OneToMany(mappedBy = "interviewQuestion")
+    private List<Like> likes;
+
     @Column(name = "ask_count", nullable = false)
     private Integer askCount;
 
@@ -36,11 +40,31 @@ public class InterviewQuestion {
 
     private LocalDateTime date;
 
+    @Column(name = "user_id")
+    private Integer userId;
+
+
     public InterviewQuestion() {
     }
 
     public InterviewQuestion(Integer id) {
         this.id = id;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public List<Like> getLikes() {
+        return likes;
+    }
+
+    public void setLikes(List<Like> likes) {
+        this.likes = likes;
     }
 
     public ProgrammingInterviewQuestion getProgrammingQuestion() {

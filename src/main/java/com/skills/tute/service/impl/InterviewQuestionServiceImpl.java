@@ -212,7 +212,7 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
     }
 
     @Override
-    @Cacheable(value = "interview-questions", key = "#name")
+    //@Cacheable(value = "interview-questions", key = "#name")
     public List<InterviewQuestionResponse> findByTopicNameAndApproval(String name, Integer userId) {
         Topic topic = topicRepository.findByName(name);
         return copy(repository.findByTopicAndApproveStatusOrderByPointsDesc(topic, ApproveStatus.APPROVED), userId);

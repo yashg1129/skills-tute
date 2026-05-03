@@ -24,14 +24,4 @@ public class LikeController {
         service.save(like);
     }
 
-//    @GetMapping
-//    Long likesCount(@PathVariable("likes") Boolean like) {
-//        return service.countByLike(like);
-//    }
-
-//    @GetMapping
-//    Long checkLikes() {
-//        return service.countByLike(like);
-//    }
-
 }

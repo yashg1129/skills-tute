@@ -1,6 +1,7 @@
 package com.skills.tute.service.impl;
 
-import com.skills.tute.config.StCache;
+import com.skills.tute.entity.Topic;
+import com.skills.tute.repository.TopicRepository;
 import com.skills.tute.service.CacheService;
 import com.skills.tute.service.InterviewQuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -18,11 +20,17 @@ public class CacheServiceImpl implements CacheService {
     @Value("${st.spring.caches}")
     private String caches;
 
+    @Value("${st.spring.refresh.caches}")
+    private String refreshCachesStr;
+
     @Autowired
     private CacheManager cacheManager;
 
     @Autowired
     private InterviewQuestionService interviewQuestionService;
+
+    @Autowired
+    private TopicRepository topicRepository;
 
     @Override
     public void clearCache(String cacheName) {
@@ -40,17 +48,14 @@ public class CacheServiceImpl implements CacheService {
 
     @Autowired
     public void refreshCaches() {
-        Set<Map.Entry<String, Boolean>> caches = StCache.getTouchedTopics();
-        for(Map.Entry<String, Boolean> cache: caches) {
-            if(cache.getValue()) {
-                String cacheName = cache.getKey();
-                Objects.requireNonNull(cacheManager.getCache(cacheName)).clear();
-                interviewQuestionService.findByTopicNameAndApproval(cacheName, null);
-                caches.remove(cacheName);
-                StCache.clear(cacheName);
-                System.out.println(StCache.getTouchedTopics2());
-            }
+        String[] refreshCaches = refreshCachesStr.split(",");
+        for(String cache: refreshCaches) {
+            Objects.requireNonNull(cacheManager.getCache(cache)).clear();
+        }
 
+        List<Topic> topics = topicRepository.findAll();
+        for(Topic topic: topics) {
+            interviewQuestionService.findByTopicNameAndApproval(topic.getName(), null);
         }
     }
 }

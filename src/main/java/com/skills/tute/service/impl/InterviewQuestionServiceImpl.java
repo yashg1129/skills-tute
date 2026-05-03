@@ -12,12 +12,10 @@ import com.skills.tute.service.CommonService;
 import com.skills.tute.service.InterviewQuestionService;
 
 import com.skills.tute.service.ProgrammingInterviewQuestionService;
-import com.skills.tute.utils.SecurityUtils;
 import com.skills.tute.utils.StConstant;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.AccessDeniedException;
@@ -219,7 +217,6 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
     }
 
     private List<InterviewQuestionResponse> copy(List<InterviewQuestion> questions, Integer userId) {
-//        List<InterviewQuestionResponse> list = new ArrayList<>();
         return questions.stream().map(question -> {
             InterviewQuestionResponse res = new InterviewQuestionResponse();
             res.setId(question.getId());

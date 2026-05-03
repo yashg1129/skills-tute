@@ -23,8 +23,8 @@ public class InterviewQuestionController {
     }
 
     @GetMapping("topic/name/{topicName}")
-    //@PreAuthorize("hasRole('USER')")
     List<InterviewQuestionResponse> findByTopicName(@PathVariable("topicName") String name, HttpSession session) {
+        System.out.println("res: "+session.getAttribute(USER_ID));
         return service.findByTopicNameAndApproval(name, (Integer)session.getAttribute(USER_ID));
     }
 

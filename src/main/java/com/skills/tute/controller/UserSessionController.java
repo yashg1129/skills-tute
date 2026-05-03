@@ -13,8 +13,9 @@ public class UserSessionController {
 
     @PostMapping
     @PreAuthorize("hasRole('USER')")
-    public void setUserSession(HttpSession session) {
+    public Integer setUserSession(HttpSession session) {
         session.setAttribute("userId", SecurityUtils.getUserId());
-        System.out.println(session.getAttribute("userId"));
+        System.out.println("init: "+session.getAttribute("userId"));
+        return (Integer) session.getAttribute("userId");
     }
 }

@@ -7,7 +7,6 @@ import lombok.Data;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Data
 @Entity
 @Table(name = "interview_questions")
 public class InterviewQuestion {
@@ -30,7 +29,7 @@ public class InterviewQuestion {
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "interviewQuestion")
     private ProgrammingInterviewQuestion programmingQuestion;
 
-    @OneToMany(mappedBy = "interviewQuestion")
+    @OneToMany(mappedBy = "interviewQuestion", fetch = FetchType.EAGER)
     private List<Like> likes;
 
     @Column(name = "ask_count", nullable = false)

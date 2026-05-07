@@ -1,6 +1,5 @@
 package com.skills.tute.service.impl;
 
-import com.skills.tute.dto.InterviewQuestionRequest;
 import com.skills.tute.dto.InterviewQuestionResponse;
 import com.skills.tute.entity.*;
 import com.skills.tute.enums.ApproveStatus;
@@ -16,6 +15,7 @@ import com.skills.tute.utils.StConstant;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.AccessDeniedException;
@@ -23,6 +23,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.skills.tute.utils.StStringUtils.*;
@@ -75,27 +76,29 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
 
     @Override
     @Transactional
-    public InterviewQuestion save(InterviewQuestionRequest request) {
+    public InterviewQuestion save(InterviewQuestionUser request) {
         return copy(request);
     }
 
-    private InterviewQuestion copy(InterviewQuestionRequest request) {
+    private InterviewQuestion copy(InterviewQuestionUser questionUser) {
+        InterviewQuestion request = questionUser.getInterviewQuestion();
         InterviewQuestion question = new InterviewQuestion();
 
         Topic topic = commonService.getTopicForUpdate(request.getTopic());
         question.setTopic(topic);
 
-        saveQuestion(request, topic);
+        saveQuestion(questionUser, topic);
 
         return question;
     }
 
-    private void saveQuestion(InterviewQuestionRequest request, Topic topic) {
+    private void saveQuestion(InterviewQuestionUser questionUser, Topic topic) {
         InterviewQuestion interviewQuestion;
+        InterviewQuestion request = questionUser.getInterviewQuestion();
         if (request.getId() != null) {
             interviewQuestion = repository.findById(request.getId()).orElse(null);
         } else {
-            interviewQuestion = repository.findByQuestionAndTopic(request.getQuestion(), topic);
+            interviewQuestion = repository.findByTopicAndQuestionAndProgram(topic.getName(), request.getQuestion(), request.getProgrammingQuestion() != null ? request.getProgrammingQuestion().getProgram() : null);
         }
 
         if (interviewQuestion == null) {
@@ -107,9 +110,9 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
             interviewQuestion.setAskCount(1);
             interviewQuestion.setDate(LocalDateTime.now());
             interviewQuestion = repository.save(interviewQuestion);
-            if (request.getProgram() != null) {
+            if (request.getProgrammingQuestion() != null) {
                 ProgrammingInterviewQuestion programmingInterviewQuestion = new ProgrammingInterviewQuestion();
-                programmingInterviewQuestion.setProgram(request.getProgram());
+                programmingInterviewQuestion.setProgram(request.getProgrammingQuestion().getProgram());
                 programmingInterviewQuestion.setInterviewQuestion(interviewQuestion);
                 programmingQuestionRepository.save(programmingInterviewQuestion);
             }
@@ -118,18 +121,18 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
             interviewQuestion.setAskCount(interviewQuestion.getAskCount() + 1);
             repository.save(interviewQuestion);
         }
-        saveInterviewQuestionUser(interviewQuestion, request);
+        saveInterviewQuestionUser(interviewQuestion, questionUser);
     }
 
-    private void saveInterviewQuestionUser(InterviewQuestion interviewQuestion, InterviewQuestionRequest request) {
+    private void saveInterviewQuestionUser(InterviewQuestion interviewQuestion, InterviewQuestionUser questionUserRequest) {
         InterviewQuestionUser interviewQuestionUser = new InterviewQuestionUser();
         interviewQuestionUser.setInterviewQuestion(interviewQuestion);
-        interviewQuestionUser.setUserId(request.getUserId());
+        interviewQuestionUser.setUserId(questionUserRequest.getUserId());
 
-        Company company = commonService.getCompanyForUpdate(request.getCompany());
+        Company company = commonService.getCompanyForUpdate(questionUserRequest.getCompany());
         interviewQuestionUser.setCompany(company);
 
-        City city = request.getCity();
+        City city = questionUserRequest.getCity();
         if (city != null && city.getId() == null && isNotBlank(city.getName())) {
             city = new City();
             city.setName(firstCharCaps(city.getName()));
@@ -140,7 +143,7 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
         }
         interviewQuestionUser.setCity(city);
 
-        Country country = request.getCountry();
+        Country country = questionUserRequest.getCountry();
         if (country != null && country.getId() == null && isNotBlank(country.getName())) {
             country = new Country();
             country.setName(firstCharCaps(country.getName()));
@@ -210,7 +213,7 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
     }
 
     @Override
-    //@Cacheable(value = "interview-questions", key = "#name")
+    @Cacheable(value = "interview-questions", key = "#name")
     public List<InterviewQuestionResponse> findByTopicNameAndApproval(String name, Integer userId) {
         Topic topic = topicRepository.findByName(name);
         return copy(repository.findByTopicAndApproveStatusOrderByPointsDesc(topic, ApproveStatus.APPROVED), userId);

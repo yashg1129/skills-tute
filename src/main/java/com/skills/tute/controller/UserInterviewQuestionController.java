@@ -24,7 +24,7 @@ public class UserInterviewQuestionController {
 
     @PostMapping
     @PreAuthorize("hasRole('USER')")
-    InterviewQuestion save(@RequestBody InterviewQuestionRequest questionRequest) throws AccessDeniedException {
+    InterviewQuestion save(@RequestBody InterviewQuestionUser questionRequest) throws AccessDeniedException {
         questionRequest.setUserId(getUserId());
         return service.save(questionRequest);
     }

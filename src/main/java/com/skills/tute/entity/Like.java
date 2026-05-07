@@ -1,5 +1,6 @@
 package com.skills.tute.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
@@ -15,6 +16,7 @@ public class Like {
 
     @ManyToOne
     @JoinColumn(name = "question_id", nullable = false)
+    @JsonIgnore
     private InterviewQuestion interviewQuestion;
 
     @Column(name = "user_id", nullable = false)

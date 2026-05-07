@@ -10,7 +10,7 @@ public class Notes {
     @EmbeddedId
     private TopicUserId id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String contents;
 
     public TopicUserId getId() {

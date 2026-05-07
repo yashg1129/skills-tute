@@ -95,7 +95,7 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
     private void saveQuestion(InterviewQuestionUser questionUser, Topic topic) {
         InterviewQuestion interviewQuestion;
         InterviewQuestion request = questionUser.getInterviewQuestion();
-        if (request.getId() != null) {
+        if (request.getId() != null && request.getProgrammingQuestion() == null) {
             interviewQuestion = repository.findById(request.getId()).orElse(null);
         } else {
             interviewQuestion = repository.findByTopicAndQuestionAndProgram(topic.getName(), request.getQuestion(), request.getProgrammingQuestion() != null ? request.getProgrammingQuestion().getProgram() : null);

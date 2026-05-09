@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface AdminInterviewQuestionService {
 
-    InterviewQuestion update(InterviewQuestionRequest question) throws AccessDeniedException;
+    InterviewQuestion update(InterviewQuestionRequest question, String approveStatus) throws AccessDeniedException;
     List<InterviewQuestion> findAll(String approval);
     void deleteById(Integer questionId);
 

@@ -22,13 +22,6 @@ public class NotesController {
         return service.save(notes);
     }
 
-//    @PutMapping
-//    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
-//    Notes update(@RequestBody Notes notes) {
-//        notes.setUserId(getUserId());
-//        return service.update(notes);
-//    }
-
     @GetMapping("/{topicId}")
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     Notes find(@PathVariable("topicId") Integer topicId) {

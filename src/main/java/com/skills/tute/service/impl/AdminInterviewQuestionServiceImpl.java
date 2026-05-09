@@ -39,16 +39,22 @@ public class AdminInterviewQuestionServiceImpl implements AdminInterviewQuestion
 
     @Override
     //@CacheEvict(value = "interview-questions", allEntries = true)
-    public InterviewQuestion update(InterviewQuestionRequest request) throws AccessDeniedException {
+    public InterviewQuestion update(InterviewQuestionRequest request, String approveStatus) throws AccessDeniedException {
         InterviewQuestion question = repository.findById(request.getId()).orElse(null);
         assert question != null;
-        Topic topic = commonService.getTopicForUpdate(request.getTopic());
-        question.setTopic(topic);
-        question.setQuestion(request.getQuestion());
-        question.setApproveStatus(ApproveStatus.valueOf(request.getApproveStatus()));
+        InterviewQuestion interviewQuestion;
+        if(approveStatus != null) {
+            question.setApproveStatus(ApproveStatus.valueOf(approveStatus));
+            interviewQuestion = repository.save(question);
+        } else {
+            Topic topic = commonService.getTopicForUpdate(request.getTopic());
+            question.setTopic(topic);
+            question.setQuestion(request.getQuestion());
+            question.setApproveStatus(ApproveStatus.valueOf(request.getApproveStatus()));
 
-        InterviewQuestion interviewQuestion = repository.save(question);
-        interviewQuestion.setProgrammingQuestion(programmingInterviewQuestionService.saveOrUpdate(new ProgrammingInterviewQuestion(request.getProgram()), question));
+            interviewQuestion = repository.save(question);
+            interviewQuestion.setProgrammingQuestion(programmingInterviewQuestionService.saveOrUpdate(new ProgrammingInterviewQuestion(request.getProgram()), question));
+        }
 
         return interviewQuestion;
     }

@@ -20,7 +20,13 @@ public class AdminInterviewQuestionController {
     @PutMapping
     @PreAuthorize("hasRole('ADMIN')")
     InterviewQuestion update(@RequestBody InterviewQuestionRequest questionRequest) throws AccessDeniedException {
-        return service.update(questionRequest);
+        return service.update(questionRequest, null);
+    }
+
+    @PutMapping("/{approveStatus}")
+    @PreAuthorize("hasRole('ADMIN')")
+    InterviewQuestion updateApproveStatus(@RequestBody InterviewQuestionRequest questionRequest, @PathVariable("approveStatus") String approveStatus) throws AccessDeniedException {
+        return service.update(questionRequest, approveStatus);
     }
 
     @GetMapping

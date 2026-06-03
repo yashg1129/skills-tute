@@ -1,6 +1,7 @@
 package com.skills.tute.controller;
 
 import ch.qos.logback.core.status.StatusUtil;
+import com.skills.tute.dto.LikeRequest;
 import com.skills.tute.entity.Like;
 import com.skills.tute.service.LikeService;
 import com.skills.tute.utils.SecurityUtils;
@@ -19,8 +20,11 @@ public class LikeController {
 
     @PostMapping
     @PreAuthorize("hasRole('USER')")
-    void save(@RequestBody Like like) {
+    void save(@RequestBody LikeRequest request) {
+        Like like = new Like();
         like.setUserId(SecurityUtils.getUserId());
+        like.setInterviewQuestion(request.interviewQuestion());
+        like.setUserLike(request.userLike());
         service.save(like);
     }
 

@@ -1,6 +1,5 @@
 package com.skills.tute.utils;
 
-import com.skills.tute.dto.InterviewQuestionRequest;
 import com.skills.tute.security.AuthenticatedUser;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

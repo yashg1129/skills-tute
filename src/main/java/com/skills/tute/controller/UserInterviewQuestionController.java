@@ -1,6 +1,5 @@
 package com.skills.tute.controller;
 
-import com.skills.tute.dto.InterviewQuestionRequest;
 import com.skills.tute.entity.InterviewQuestion;
 import com.skills.tute.entity.InterviewQuestionUser;
 import com.skills.tute.enums.ApproveStatus;

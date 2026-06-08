@@ -1,5 +1,9 @@
 package com.skills.tute.dto;
 
+import com.skills.tute.entity.Like;
+
+import java.util.List;
+
 public class InterviewQuestionResponse {
 
     private Integer id;
@@ -7,10 +11,16 @@ public class InterviewQuestionResponse {
     private String program;
     private String postedBy;
     private Integer askCount;
-    private Boolean userLike;
-    private Long likes;
-    private Long dislikes;
+    private List<Like> likes;
     private String topicName;
+
+    public List<Like> getLikes() {
+        return likes;
+    }
+
+    public void setLikes(List<Like> likes) {
+        this.likes = likes;
+    }
 
     public Integer getId() {
         return id;
@@ -18,14 +28,6 @@ public class InterviewQuestionResponse {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public String getTopicName() {
-        return topicName;
-    }
-
-    public void setTopicName(String topicName) {
-        this.topicName = topicName;
     }
 
     public String getQuestion() {
@@ -52,14 +54,6 @@ public class InterviewQuestionResponse {
         this.postedBy = postedBy;
     }
 
-    public Boolean getUserLike() {
-        return userLike;
-    }
-
-    public void setUserLike(Boolean userLike) {
-        this.userLike = userLike;
-    }
-
     public Integer getAskCount() {
         return askCount;
     }
@@ -68,19 +62,11 @@ public class InterviewQuestionResponse {
         this.askCount = askCount;
     }
 
-    public Long getLikes() {
-        return likes;
+    public String getTopicName() {
+        return topicName;
     }
 
-    public void setLikes(Long likes) {
-        this.likes = likes;
-    }
-
-    public Long getDislikes() {
-        return dislikes;
-    }
-
-    public void setDislikes(Long dislikes) {
-        this.dislikes = dislikes;
+    public void setTopicName(String topicName) {
+        this.topicName = topicName;
     }
 }

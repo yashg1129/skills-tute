@@ -230,16 +230,17 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService {
             }
             res.setAskCount(question.getAskCount());
 
-            if(userId != null) {
+            //if(userId != null) {
                 //res.setPostedBy(q.);
-                Like like = likeRepository.findByInterviewQuestionAndUserId(question, userId);
-                res.setUserLike(like != null ? like.getUserLike() : null);
-            }
+                List<Like> likes = likeRepository.findByInterviewQuestion(question);
+                res.setLikes(likes);
+                //res.setUserLike(like != null ? like.getUserLike() : null);
+          //  }
 
-            Map<Boolean, Long> likes = question.getLikes().stream().filter(like -> like.getUserLike() != null).collect(
-                    Collectors.groupingBy(Like::getUserLike, Collectors.counting()));
-            res.setLikes(likes.get(Boolean.TRUE));
-            res.setDislikes(likes.get(Boolean.FALSE));
+//            Map<Boolean, Long> likes = question.getLikes().stream().filter(like -> like.getUserLike() != null).collect(
+//                    Collectors.groupingBy(Like::getUserLike, Collectors.counting()));
+//            res.setLikes(likes.get(Boolean.TRUE));
+//            res.setDislikes(likes.get(Boolean.FALSE));
             res.setTopicName(question.getTopic().getName());
 
             return res;

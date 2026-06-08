@@ -43,10 +43,30 @@ public class LikeServiceImpl implements LikeService {
         InterviewQuestion question = questionRepository.findById(like.getInterviewQuestion().getId()).orElse(null);
         assert question != null;
         Integer points = question.getPoints();
-        if(result == null || like.getUserLike() != null) {
-            points = like.getUserLike() ? points + likePoints : points - dislikePoints;
-        } else if(like.getUserLike() == null){
-            points = result.getUserLike() ? points - likePoints : points + dislikePoints;
+        if(result != null) {//User is already like/unlike
+            if(result.getUserLike() == null) {
+                if(like.getUserLike()) {
+                    points += likePoints;
+                } else {
+                    points -= dislikePoints;
+                }
+            } else if(result.getUserLike() && like.getUserLike() == null) {
+                points -= likePoints;
+            } else if(!result.getUserLike() && like.getUserLike() == null) {
+                points += dislikePoints;
+            } else if(result.getUserLike() && !like.getUserLike()) {
+                points -= likePoints;
+                points -= dislikePoints;
+            } else if(!result.getUserLike() && like.getUserLike()) {
+                points += dislikePoints;
+                points += likePoints;
+            }
+        } else {
+            if(like.getUserLike()) {
+                points += likePoints;
+            } else {
+                points -= dislikePoints;
+            }
         }
         question.setPoints(points);
         questionRepository.save(question);

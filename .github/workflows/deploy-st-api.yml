@@ -15,7 +15,7 @@ env:
   AWS_REGION: ap-south-1
   ECR_REPOSITORY: st-api
   ECS_CLUSTER: skillstute-prod-cluster
-  ECS_SERVICE: st-api-service
+  ECS_SERVICE: st-api-task-service
   ECS_TASK_DEFINITION: .github/ecs/st-api-task-definition.json
   CONTAINER_NAME: st-api
 

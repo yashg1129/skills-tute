@@ -13,7 +13,7 @@ public class Reward {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String desc;
+    private String description;
 
     private Integer credit;
     private Integer debit;
@@ -23,4 +23,52 @@ public class Reward {
 
     @Column(name = "user_id", nullable = false)
     private Integer userId;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Integer getCredit() {
+        return credit;
+    }
+
+    public void setCredit(Integer credit) {
+        this.credit = credit;
+    }
+
+    public Integer getDebit() {
+        return debit;
+    }
+
+    public void setDebit(Integer debit) {
+        this.debit = debit;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
 }

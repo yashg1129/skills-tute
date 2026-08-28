@@ -1,15 +1,16 @@
 package com.skills.tute.service;
 
-import com.skills.tute.entity.Party;
+import com.skills.tute.dto.VoteRequest;
+import com.skills.tute.dto.VoteResponse;
 import com.skills.tute.entity.Vote;
 
-import java.util.Map;
+import java.util.List;
 
 public interface VoteService {
 
-    Vote save(Vote vote);
+    Vote save(VoteRequest vote);
 
     void deleteAllByUserId(Integer userId);
 
-    Map<Party, Integer> calculateVotes(Integer userId);
+    List<VoteResponse> calculateVotes(Integer userId);
 }

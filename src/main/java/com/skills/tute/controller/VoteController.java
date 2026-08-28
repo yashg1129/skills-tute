@@ -1,13 +1,13 @@
 package com.skills.tute.controller;
 
-import com.skills.tute.entity.Party;
+import com.skills.tute.dto.VoteRequest;
+import com.skills.tute.dto.VoteResponse;
 import com.skills.tute.entity.Vote;
 import com.skills.tute.service.VoteService;
-import com.skills.tute.utils.SecurityUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/votes")
@@ -21,9 +21,7 @@ public class VoteController {
 
     @PostMapping
     @PreAuthorize("hasRole('USER')")
-    public Vote save(@RequestBody Vote vote) {
-        vote.setId(null);
-        vote.setUserId(SecurityUtils.getUserId());
+    public Vote save(@RequestBody VoteRequest vote) {
         return service.save(vote);
     }
 
@@ -35,7 +33,7 @@ public class VoteController {
 
     @GetMapping("/{userid}")
     @PreAuthorize("hasRole('USER')")
-    public Map<Party, Integer> calculateMyVotes(@PathVariable("userid") Integer userId) {
+    public List<VoteResponse> calculateMyVotes(@PathVariable("userid") Integer userId) {
         return service.calculateVotes(userId);
     }
 

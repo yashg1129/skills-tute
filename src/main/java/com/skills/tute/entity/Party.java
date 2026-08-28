@@ -13,6 +13,13 @@ public class Party {
 
     private String name;
 
+    public Party() {
+    }
+
+    public Party(Integer id) {
+        this.id = id;
+    }
+
     public Integer getId() {
         return id;
     }

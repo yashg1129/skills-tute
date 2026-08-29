@@ -13,4 +13,6 @@ public interface VoteService {
     void deleteAllByUserId(Integer userId);
 
     List<VoteResponse> calculateVotes(Integer userId);
+
+    Integer countTotalVotes(Integer userId);
 }

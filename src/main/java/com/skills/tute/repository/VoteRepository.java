@@ -12,7 +12,9 @@ public interface VoteRepository extends JpaRepository<Vote, Integer> {
 
     void deleteByUserId(Integer userId);
 
-    @Query(value = "select party_id, count(*) as counts from votes where user_id = :userId group by party_id ", nativeQuery = true)
+    @Query(value = "select party_id, count(*) as counts from votes where user_id = :userId group by party_id order by counts desc", nativeQuery = true)
     List<VoteResponse> countVotesByPartyForUser(@Param("userId") Integer userId);
 
+    @Query(value = "select count(*) as counts from votes where user_id = :userId", nativeQuery = true)
+    Integer countVotes(@Param("userId") Integer userId);
 }

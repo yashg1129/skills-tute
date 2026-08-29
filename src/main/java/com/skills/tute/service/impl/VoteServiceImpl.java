@@ -48,4 +48,9 @@ public class VoteServiceImpl implements VoteService {
     public List<VoteResponse> calculateVotes(Integer userId) {
         return this.repository.countVotesByPartyForUser(userId);
     }
+
+    @Override
+    public Integer countTotalVotes(Integer userId) {
+        return this.repository.countVotes(userId);
+    }
 }

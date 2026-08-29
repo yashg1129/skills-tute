@@ -20,20 +20,22 @@ public class VoteController {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('USER')")
     public Vote save(@RequestBody VoteRequest vote) {
         return service.save(vote);
     }
 
     @DeleteMapping("/{userid}")
-    @PreAuthorize("hasRole('USER')")
     public void deleteMyVotes(@PathVariable("userid") Integer userId) {
         service.deleteAllByUserId(userId);
     }
 
+    @GetMapping("/total/{userid}")
+    public Integer totalVote(@PathVariable("userid") Integer userId) {
+        return service.countTotalVotes(userId);
+    }
+
     @GetMapping("/{userid}")
-    @PreAuthorize("hasRole('USER')")
-    public List<VoteResponse> calculateMyVotes(@PathVariable("userid") Integer userId) {
+    public List<VoteResponse> calculateUserVotes(@PathVariable("userid") Integer userId) {
         return service.calculateVotes(userId);
     }
 

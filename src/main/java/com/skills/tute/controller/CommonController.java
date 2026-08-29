@@ -21,7 +21,6 @@ public class CommonController {
 
     @Autowired
     private CommonService service;
-
     @Autowired
     private TopicService topicService;
 

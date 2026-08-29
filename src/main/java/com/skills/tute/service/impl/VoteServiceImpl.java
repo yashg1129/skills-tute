@@ -9,14 +9,11 @@ import com.skills.tute.service.VoteService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
+import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class VoteServiceImpl implements VoteService {
-
-    private static final Map<Integer, Integer> voteMap = new HashMap<>();
 
     private final VoteRepository repository;
 
@@ -26,15 +23,15 @@ public class VoteServiceImpl implements VoteService {
 
     @Override
     public Vote save(VoteRequest voteRecord) {
-        Integer count = voteMap.getOrDefault(voteRecord.userId(), 0);
+        Integer count = voteRecord.totalVotes();
         Vote vote = new Vote();
         vote.setUserId(voteRecord.userId());
+        vote.setCreatedDate(LocalDate.now());
         if((count > 10 && count < 20) || (count > 40 && count < 70)) {
             vote.setParty(new Party(1));
         } else {
             vote.setParty(new Party(voteRecord.partyId()));
         }
-        voteMap.put(voteRecord.userId(), ++count);
         return repository.save(vote);
     }
 

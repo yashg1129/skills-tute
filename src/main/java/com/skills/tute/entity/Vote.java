@@ -2,6 +2,8 @@ package com.skills.tute.entity;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
+
 @Entity
 @Table(name = "votes")
 public class Vote {
@@ -16,6 +18,17 @@ public class Vote {
     @ManyToOne
     @JoinColumn(name = "party_id", nullable = false)
     private Party party;
+
+    @Column(name = "created_date", nullable = false)
+    private LocalDate createdDate;
+
+    public LocalDate getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(LocalDate createdDate) {
+        this.createdDate = createdDate;
+    }
 
     public Integer getId() {
         return id;

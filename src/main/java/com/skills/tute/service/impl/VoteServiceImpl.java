@@ -50,4 +50,9 @@ public class VoteServiceImpl implements VoteService {
     public Integer countTotalVotes(Integer userId) {
         return this.repository.countVotes(userId);
     }
+
+    @Override
+    public Vote findById(Integer id) {
+        return this.repository.findById(id).orElse(null);
+    }
 }

@@ -14,5 +14,7 @@ public interface VoteService {
 
     List<VoteResponse> calculateVotes(Integer userId);
 
+    Vote findById(Integer id);
+
     Integer countTotalVotes(Integer userId);
 }

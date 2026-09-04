@@ -20,9 +20,6 @@ public class Tutorial {
 
     private String slug;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
-    private String description;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ApproveStatus  approveStatus;
